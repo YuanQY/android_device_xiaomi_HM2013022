@@ -6,15 +6,15 @@ ro.secure=0
 ro.allow.mock.location=1
 persist.mtk.aee.aed=on
 ro.debuggable=1
-persist.sys.usb.config=mass_storage,adb
+persist.sys.usb.config=mtp,adb
 persist.service.acm.enable=0
 persist.sys.timezone=Asia/Shanghai 
 
 # begin mediatek build properties
-ro.mediatek.version.release=ALPS.JB2.MP.V1.3
+ro.mediatek.version.release=ALPS.JB2.TDD.MP.V1
 ro.mediatek.platform=MT6589
 ro.mediatek.chip_ver=S01
-ro.mediatek.version.branch=ALPS.JB2.MP
+ro.mediatek.version.branch=ALPS.JB2.TDD.MP
 ro.mediatek.version.sdk=1
 # end mediatek build properties
 #
@@ -71,13 +71,13 @@ ro.audio.silent=0
 
 ro.zygote.preload.enable=0
 
-###LEWA BEGIN
-#dual Sdcard
-ro.sys.dualSD=true
+# button jack mode and switch
+persist.sys.button_jack_profile=volume
+persist.sys.button_jack_switch=0
 
-#video call support
-ro.lewa.videocall=true
-##LEWA END
+sys.haptic.down.normal=0,40,10,-40,10,0,10
+sys.haptic.down.strong=0,80,10,-80,10,0,10
+sys.haptic.down.weak=0,20,10,-20,10,0,10
 
 #
 # ADDITIONAL_BUILD_PROPERTIES
@@ -98,7 +98,10 @@ fmradio.driver.chip=3
 ro.sf.hwrotation=0
 
 ro.mediatek.gemini_support=true
-
+ro.gemini.smart_3g_switch=0
+ro.operator.optr=OP01
+ro.operator.spec=SPEC0200
+ro.operator.seg=SEGC
 persist.radio.fd.counter=15
 persist.radio.fd.off.counter=5
 persist.radio.fd.r8.counter=15
@@ -112,10 +115,8 @@ mediatek.wlan.module.postfix=_mt6628
 ro.config.notification_sound=Proxima.ogg
 ro.config.alarm_alert=Alarm_Classic.ogg
 ro.config.ringtone=Backroad.ogg
-ro.lewa.device=XIAOMI_HM1_JB2
-ro.lewa.version=LeWa_13.10.24
-ro.lewa.camera.flashlight=true
-ro.lewa.osversion=5
+persist.sys.mitalk.enable=true
+persist.power.useautobrightadj=true
 ro.kernel.android.checkjni=0
 net.bt.name=Android
 dalvik.vm.stack-trace-file=/data/anr/traces.txt
