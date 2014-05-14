@@ -1,13 +1,25 @@
-$(call inherit-product, $(SRC_TARGET_DIR)/product/languages_full.mk)
+# Copyright (C) 2013 The Android Open Source Project
+#
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+#
+# http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
 
+$(call inherit-product, $(SRC_TARGET_DIR)/product/languages_full.mk)
 # The gps config appropriate for this device
 $(call inherit-product, device/common/gps/gps_us_supl.mk)
 $(call inherit-product-if-exists, vendor/google/gapps.mk)
 $(call inherit-product-if-exists, vendor/xiaomi/HM2013022/HM2013022-vendor.mk)
 
-DEVICE_PACKAGE_OVERLAYS += device/xiaomi/HM2013022/overlay
+DEVICE_PACKAGE_OVERLAYS += $(LOCAL_PATH)/overlay
 
-LOCAL_PATH := device/xiaomi/HM2013022
 ifeq ($(TARGET_PREBUILT_KERNEL),)
 	LOCAL_KERNEL := $(LOCAL_PATH)/kernel
 else
@@ -19,7 +31,7 @@ PRODUCT_COPY_FILES += \
     $(LOCAL_KERNEL):kernel
 
 # Copy Hongmi init files
-HM_INIT_FILES := $(wildcard device/xiaomi/HM2013022/ramdisk/*)
+HM_INIT_FILES := $(wildcard $(LOCAL_PATH)/ramdisk/*)
 PRODUCT_COPY_FILES += \
 	$(foreach i, $(HM_INIT_FILES), $(i):recovery/root/$(notdir $(i))) 
 
@@ -100,14 +112,26 @@ PRODUCT_PROPERTY_OVERRIDES := \
 	wifi.tethering.interface=ap0
 
 PRODUCT_PACKAGES += \
+	fsck.f2fs
+
+# audio
+PRODUCT_PACKAGES += \
+	audio.r_submix.default \
+	libblisrc
+
+# wifi
+PRODUCT_PACKAGES += \
 	wlan_loader \
 	wlan_cu \
 	wpa_supplicant \
-	libaudio.r_submix.default \
-	libblisrc 
-	
+	lib_driver_cmd_mtk
+
+PRODUCT_COPY_FILES += \
+	$(LOCAL_PATH)/wpa_supplicant_overlay.conf:system/etc/wifi/wpa_supplicant_overlay.conf
+
 $(call inherit-product, frameworks/native/build/phone-xhdpi-1024-dalvik-heap.mk)
-$(call inherit-product, build/target/product/full.mk)
+#$(call inherit-product, build/target/product/full.mk)
+$(call inherit-product, $(SRC_TARGET_DIR)/product/full_base_telephony.mk)
 
 # Engle, add for BlueZ
 $(call inherit-product, $(SRC_TARGET_DIR)/product/bluez.mk)

@@ -19,10 +19,13 @@
     </array>
     <array name="cpu.speeds">
         <value>400000</value>
+        <value>800000</value>
+        <value>1200000</value>
+        <value>1500000</value>
     </array>
     <item name="cpu.idle">0.1</item>
     <array name="cpu.active">
         <value>0.1</value>
     </array>
-    <item name="battery.capacity">1000</item>
+    <item name="battery.capacity">2000</item>
 </device>
