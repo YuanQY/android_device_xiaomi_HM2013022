@@ -15,7 +15,7 @@ INCLUDES = $(WPA_SUPPL_DIR) \
 
 include $(CLEAR_VARS)
 LOCAL_MODULE := lib_driver_cmd_mtk
-LOCAL_MODULE_TAGS := optional
+LOCAL_MODULE_TAGS := optional eng
 LOCAL_SHARED_LIBRARIES := libc libcutils
 LOCAL_STATIC_LIBRARIES := libnl_2
 LOCAL_CFLAGS := $(L_CFLAGS)

@@ -1,0 +1,35 @@
+commit 66201af4b34a63516e542cf16b19957f77f81edb
+Author: androidmeda <hephappy@gmail.com>
+Date:   Thu Nov 21 18:09:28 2013 +0200
+
+    Add MTK groups (-DTARGET_MTK)
+    
+    Change-Id: Ieae6a3cf8b14feecbab5be2db95abfa286a1ab97
+
+diff --git a/include/private/android_filesystem_config.h b/include/private/android_filesystem_config.h
+index 16efe58..5f497d8 100644
+--- a/include/private/android_filesystem_config.h
++++ b/include/private/android_filesystem_config.h
+@@ -99,6 +99,11 @@
+ #define AID_MOT_DLNA      9011  /* DLNA native */
+ #endif // MOTOROLA_UIDS
+ 
++#if defined(TARGET_MTK)
++#define AID_CCCI          9996
++#define AID_NVRAM         9997
++#endif // TARGET_MTK
++
+ #define AID_MISC          9998  /* access to misc storage */
+ #define AID_NOBODY        9999
+ 
+@@ -175,6 +180,10 @@ static const struct android_id_info android_ids[] = {
+     { "mot_caif",  AID_MOT_CAIF, },
+     { "mot_dlna",  AID_MOT_DLNA, },
+ #endif
++#if defined(TARGET_MTK)
++    { "nvram", AID_NVRAM, },
++    { "ccci", AID_CCCI, },
++#endif // TARGET_MTK
+     { "misc",      AID_MISC, },
+     { "nobody",    AID_NOBODY, },
+     { "theme_man", AID_THEMEMAN },
