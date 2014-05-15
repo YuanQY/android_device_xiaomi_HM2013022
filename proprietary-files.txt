@@ -94,18 +94,18 @@ lib/hw/libaudio.r_submix.default.so
 lib/hw/libaudio.usb.default.so
 lib/hw/camera.default.so
 ##########################################--------- temp-begin
-bin/surfaceflinger
-lib/libui.so
-lib/libgui.so
-lib/libsurfaceflinger.so
-lib/libbinder.so
-lib/libmedia.so
-lib/libstagefright.so
-lib/libstagefright_memutil.so
-lib/libstagefright_omx.so
-lib/libstagefright_wfd.so
-lib/libcamera_client.so
-lib/libcamera_metadata.so
+#bin/surfaceflinger
+#lib/libui.so
+#lib/libgui.so
+#lib/libsurfaceflinger.so
+#lib/libbinder.so
+#lib/libmedia.so
+#lib/libstagefright.so
+#lib/libstagefright_memutil.so
+#lib/libstagefright_omx.so
+#lib/libstagefright_wfd.so
+#lib/libcamera_client.so
+#lib/libcamera_metadata.so
 ##########################################--------- temp-end
 
 # OTHER HW
