@@ -6,16 +6,22 @@ import init.protect.rc
 on early-init
     mount debugfs /sys/kernel/debug /sys/kernel/debug
 
-on boot
-    chown root radio /proc/cmdline
+on early_property:ro.hardware=mt6589
+    setprop ro.mtk.hardware mt6589
 
-on init  
+on init
+    write /proc/bootprof "INIT: on init start"
+
     mkdir /mnt/media_rw/sdcard0 0700 media_rw media_rw
     mkdir /mnt/media_rw/sdcard1 0700 media_rw media_rw
+    # See storage config details at http://source.android.com/tech/storage/
     mkdir /storage/sdcard0 0700 root root
     mkdir /storage/sdcard1 0700 root root
 
     symlink /storage/sdcard0 /mnt/emmc
+    mkdir /mnt/cd-rom 0000 system system
+    # Create private mountpoint so we can MS_MOVE from staging
+    mount tmpfs tmpfs /mnt/secure mode=0700,uid=0,gid=0
     symlink /storage/sdcard0 /emmc
     symlink /storage/sdcard1 /sdcard
     symlink /storage/sdcard1 /mnt/sdcard
@@ -40,6 +46,7 @@ on fs
     mkdir /protect_f
     mkdir /protect_s 
 
+   mount iso9660 loop@/system/mobile_toolkit/iAmCdRom.iso /mnt/cd-rom ro
     chown system system /protect_f
     chown system system /protect_s
     chmod 0771 /protect_f
@@ -58,20 +65,30 @@ on fs
 
     mkdir /dev/radio 0770 radio radio
 
+on post-fs
+    mkdir /cache/recovery 0770 system cache
+
+# change owner
+    chown root system /proc/bootprof
+    chown root system /proc/mtprof/cputime
 on post-fs-data
     setprop vold.post_fs_data_done 1
 
     # create dalvik-cache and double-check the perms, so as to enforce our permissions
-    mkdir /data/dalvik-cache 0771 system system
-    chown system system /data/dalvik-cache
-    chmod 0771 /data/dalvik-cache
-                
     mkdir /cache/dalvik-cache 0771 system system
     chown system system /cache/dalvik-cache
     chmod 0771 /cache/dalvik-cache
  
+    #Engle, start
     mkdir /data/nvram 0770 root nvram
 
+    # give system access to wpa_supplicant.conf for backup and restore
+    chmod 0660 /data/misc/wifi/p2p_supplicant.conf
+
+    #give system access to rfkill device node
+    chmod 0660 /dev/rfkill
+
+    #Engle, end
 # -----------------------
 # Add by MTK 
 
@@ -138,7 +155,7 @@ on post-fs-data
 
     # GesturePorting Jiangde++, for gsensor no early suspend
     # chmod 0777  /sys/devices/platform/gsensor/driver/noearly
-    chown system /sys/devices/platform/gsensor/driver/noearly
+    # chown system /sys/devices/platform/gsensor/driver/noearly
 
     chown system system /dev/hwmsensor
     chown system system /dev/msensor
@@ -159,7 +176,11 @@ on post-fs-data
 
     mkdir /data/amit/ 0770 system system
     mkdir /data/misc/sensors 0664 system system
-    mkdir /data/misc/akmd 0664 system system
+    mkdir /data/misc/akmd 0777 system system
+    mkdir /data/misc/acdapi/ 0770 system system
+    chmod 0666 /data/misc/acdapi/calib.dat
+    chmod 0666 /data/misc/acdapi/param.dat
+    chmod 0666 /data/misc/acdapi/sensors.dat
     chown system /sys/class/input/input5/enable
     chown system /sys/class/input/input5/delay
     chown system /sys/class/input/input5/wake
@@ -263,10 +284,12 @@ on post-fs-data
     # FM Radio device, FIXME: this is not a proper way to set permissions
     chmod 0666 /dev/fm
 
+    # AGPS
+    mkdir /data/agps_supl 0771 gps system
+
     # GPS
     chmod 0666 /dev/gps
     chmod 0660 /dev/stpgps
-    mkdir /data/agps_supl 0771 gps system
     chown gps gps /dev/stpgps
     chown gps gps /sys/class/gpsdrv/gps/pwrctl
     chown gps gps /sys/class/gpsdrv/gps/suspend
@@ -409,20 +432,87 @@ on post-fs-data
     chown system system /proc/wmt_tm/wmt_val
     chown system system /proc/wmt_tm/wfd_stat
 
+on boot
+    chown root radio /proc/cmdline
+    # Tweak background writeout
+    write /proc/sys/vm/dirty_writeback_centisecs 300
+    chmod 0660 /sys/power/autosleep
+
+    chown system system /sys/devices/system/cpu/cpufreq/hotplug/cpu_num_base
+    chmod 0660 /sys/devices/system/cpu/cpufreq/hotplug/cpu_num_base
+
+    chmod 0664 /sys/class/leds/lcd-backlight/brightness
+    chmod system system /sys/class/leds/flashlight/brightness
+
+    chown system system /sys/class/leds/red/brightness
+    chown system system /sys/class/leds/green/brightness
+    chown system system /sys/class/leds/blue/brightness
+    chown system system /sys/class/leds/white/brightness
+    chown system system /sys/class/leds/yellow/brightness
+    chown system system /sys/class/leds/cyan/brightness
+    chown system system /sys/class/leds/purple/brightness
+    chown system system /sys/class/leds/red/device/grpfreq
+    chown system system /sys/class/leds/red/device/grppwm
+    chown system system /sys/class/leds/red/device/blink
+
+    chown root   system /sys/kernel/debug/binder/transaction_log_enable
+
+	chown root   radio  /sys/class/leds/lcd-backlight/duty
+	chown root   radio  /sys/class/leds/lcd-backlight/div
+	chown system system /sys/class/leds/lcd-backlight/trigger
+	chown system system /sys/class/leds/button-backlight/trigger
+	chown system system /sys/class/leds/keyboard-backlight/trigger
+	chown system system /sys/class/leds/jogball-backlight/trigger
+	chown system system /sys/class/leds/red/trigger
+	chown system system /sys/class/leds/green/trigger
+	chown system system /sys/class/leds/blue/trigger
+	chown system system /sys/class/leds/white/trigger
+    chown system system /sys/class/leds/yellow/trigger
+    chown system system /sys/class/leds/cyan/trigger
+    chown system system /sys/class/leds/purple/trigger
+
+    # Permission for hibernation
+    chown radio system /sys/power/tuxonice
+    chown radio system /sys/power/tuxonice/do_hibernate
+    chmod 0770 /sys/power/tuxonice
+    chmod 0220 /sys/power/tuxonice/do_hibernate
+    chmod 0666 /dev/hardwareinfo
+    chmod 0666 /dev/gsensor
+
+## Daemon processes to be run by init.
+##
+on property:selinux.reload_policy=1
+    restart ueventd
+    restart installd
+
+service debuggerd /system/bin/debuggerd
+    class main
+
 # SGX init
 service pvrsrvctl /system/vendor/bin/pvrsrvctl --start
     class main
     user root
     group root
     oneshot
-    disabled
+    #disabled
 
-# Connectivity related services
+#
+# MT6620 related services (Begin)
+#
+
 service hald /system/bin/hald
     class main
     socket hald stream 0660 root system
     user system
     group system radio mount wifi inet net_admin
+
+service insmod /system/bin/logwrapper insmod 
+    disabled
+    oneshot    
+
+service rmmod /system/bin/logwrapper rmmod 
+    disabled
+    oneshot        
 
 service stp_dump /system/bin/stp_dump3
     user system
@@ -445,10 +535,6 @@ service nvram_daemon /system/bin/nvram_daemon
     user nvram
     group nvram system
     oneshot
-
-service NvRAMAgent /system/bin/nvram_agent_binder
-    user system
-    group system nvram
 
 service pq /system/bin/pq
     class main
@@ -498,6 +584,10 @@ service ap_daemon /system/bin/wpa_supplicant \
 	disabled
 	oneshot
 
+#
+# MT6620 related services (End)
+#
+
 service dhcpcd_wlan0 /system/bin/logwrapper /system/bin/dhcpcd -A -BK -dd
     class main
     disabled
@@ -532,11 +622,33 @@ on property:service.dhcp6c_wlan0.enable=0
 on property:service.dhcp6c_wlan0.enable=1
     start dhcp6c_wlan0
 
-# sensor services
+service DMAgent /system/bin/dm_agent_binder
+    user system
+    group system nvram cache
+
+
 service msensord /system/bin/msensord
     class main
     oneshot
 
+service matv /system/bin/matv
+    class main
+    user system
+    group system sdcard_rw media
+    ioprio rt 4
+
+service mtkGD /system/bin/mtkGD
+    class main
+    user system
+    group system
+
+service dpfd /system/bin/dpfd
+	user root
+	group system media
+
+#
+#sensor service (begin)
+#
 service ami304d /system/bin/logwrapper /system/bin/ami304d
     user system
     group system
@@ -554,8 +666,14 @@ service akmd8975 /system/bin/akmd8975
     user system
     group system
 
-service akmd8963 /system/bin/akmd8963
+service akmd8963 /system/bin/akmd8963 -m 7 -o 1 
     disabled
+    user system
+    group system
+
+service AcdApiDaemon /system/bin/AcdApiDaemon
+    disabled
+    oneshot
     user system
     group system
 
@@ -573,8 +691,20 @@ service geomagneticd /system/bin/geomagneticd
     disabled
     user system
     group system input
+#
+#sensor service (end)
+#
 
 # thermal
+service shutdown /system/bin/logwrapper /system/bin/shutdown
+    user root
+    group root
+    disabled
+
+service NvRAMAgent /system/bin/nvram_agent_binder
+    user system
+    group system nvram
+
 service thermal_manager /system/bin/thermal_manager
     user root
     oneshot
@@ -582,6 +712,16 @@ service thermal_manager /system/bin/thermal_manager
 service thermal /system/bin/thermal
     user system
     group system
+
+service backuprestore /system/bin/br_app_data_service
+	class main
+	socket backuprestore stream 0660 root sdcard_rw
+	user root
+#add for power-off alarm
+service poad /system/bin/poad
+    user system
+    group system
+    oneshot
 
 # gps
 service agpsd /system/bin/mtk_agpsd
