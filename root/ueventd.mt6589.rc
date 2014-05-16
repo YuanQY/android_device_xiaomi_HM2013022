@@ -123,6 +123,14 @@
 /sys/devices/platform/leds-mt65xx/leds/red   delay_off      0664  system   system
 /sys/devices/platform/leds-mt65xx/leds/blue   delay_on      0664  system   system
 /sys/devices/platform/leds-mt65xx/leds/blue   delay_off      0664  system   system
+/sys/devices/platform/leds-mt65xx/leds/white   delay_on      0664  system   system
+/sys/devices/platform/leds-mt65xx/leds/white   delay_off      0664  system   system
+/sys/devices/platform/leds-mt65xx/leds/yellow   delay_on      0664  system   system
+/sys/devices/platform/leds-mt65xx/leds/yellow   delay_off      0664  system   system
+/sys/devices/platform/leds-mt65xx/leds/cyan   delay_on      0664  system   system
+/sys/devices/platform/leds-mt65xx/leds/cyan   delay_off      0664  system   system
+/sys/devices/platform/leds-mt65xx/leds/purple   delay_on      0664  system   system
+/sys/devices/platform/leds-mt65xx/leds/purple   delay_off      0664  system   system
 
 #NFC device
 /dev/msr3110              0666   root       root

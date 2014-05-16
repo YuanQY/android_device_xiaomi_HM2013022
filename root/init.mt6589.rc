@@ -1,3 +1,4 @@
+import init.environ.rc
 import init.mt6589.usb.rc
 import init.modem.rc
 import init.protect.rc
@@ -50,7 +51,7 @@ on fs
 
     # device info /proc interface
     insmod /system/lib/modules/devinfo.ko
-    exec /system/xbin/mknod /dev/devmap c 196 0
+    mknod /dev/devmap c 196 0
     chmod 0444 /dev/devmap
     chown root media /dev/devmap
     start pvrsrvctl
@@ -71,9 +72,20 @@ on post-fs-data
  
     mkdir /data/nvram 0770 root nvram
 
+# -----------------------
+# Add by MTK 
+
+    # dhcp server 
+    mkdir /data/misc/dhcp 0770 dhcp wifi
+    chown dhcp wifi /data/misc/dhcp
+    chown dhcp dhcp /data/misc/dhcp/dnsmasq.leases
+    chown dhcp dhcp /data/misc/dhcp/dnsmasq.p2p0.leases
     # radvd
     mkdir /data/misc/radvd 0770 system system
     chmod 444 /etc/radvd/radvd.conf
+    # SGX
+    insmod /system/lib/modules/pvrsrvkm.ko
+    insmod /system/lib/modules/mtklfb.ko
 
     # Permissions for System Server and daemons.
     chown root   radio  /sys/class/leds/lcd-backlight/brightness
@@ -138,7 +150,7 @@ on post-fs-data
     chown root radio /sys/devices/platform/Accdet_Driver/driver/accdet_call_state
     #VideoCodec
     insmod /system/lib/modules/vcodec_kernel_driver.ko
-    exec /system/xbin/mknod /dev/Vcodec c 160 0
+    mknod /dev/Vcodec c 160 0
     chmod 0660 /dev/Vcodec
     chown system media /dev/Vcodec
 
@@ -204,12 +216,12 @@ on post-fs-data
 
     # Android SEC related device nodes
     insmod /system/lib/modules/sec.ko
-    exec /system/xbin/mknod /dev/sec c 182 0
+    mknod /dev/sec c 182 0
     chmod 0660 /dev/sec
     chown root system /dev/sec
 
     # FM Radio device node
-    exec /system/xbin/mknod /dev/fm     c 193 0
+    mknod /dev/fm     c 193 0
     chmod 0660 /dev/fm
     chown system media /dev/fm
 
@@ -234,14 +246,14 @@ on post-fs-data
     insmod /system/lib/modules/mtk_wmt_wifi.ko
 
     # Create char device file for WMT, GPS, BT, FM, WIFI
-    exec /system/xbin/mknod /dev/stpwmt c 190 0
-    exec /system/xbin/mknod /dev/stpgps c 191 0
-    exec /system/xbin/mknod /dev/stpbt  c 192 0
-    exec /system/xbin/mknod /dev/fm     c 193 0
+    mknod /dev/stpwmt c 190 0
+    mknod /dev/stpgps c 191 0
+    mknod /dev/stpbt  c 192 0
+    mknod /dev/fm     c 193 0
     chmod 0660 /dev/stpwmt
     chown system system /dev/stpwmt
  
-    exec /system/xbin/mknod /dev/wmtWifi c 153 0
+    mknod /dev/wmtWifi c 153 0
     chmod 0666 /dev/wmtWifi
 
     # BT
@@ -304,6 +316,9 @@ on post-fs-data
     chmod 0660 /dev/kd_camera_flashlight
     chmod 0660 /dev/kd_camera_hw_bus2
     chmod 0660 /dev/FM50AF
+    chmod 0660 /dev/OV8825AF
+    chmod 0660 /dev/S5K3H2YXAF
+    chmod 0660 /dev/BU6424AF
     chmod 0660 /dev/CAM_CAL_DRV
 
     chown system camera /dev/camera-sysram
@@ -313,6 +328,9 @@ on post-fs-data
     chown system camera /dev/kd_camera_flashlight
     chown system camera /dev/kd_camera_hw_bus2
     chown system camera /dev/FM50AF
+    chown system camera /dev/OV8825AF
+    chown system camera /dev/S5K3H2YXAF
+    chown system camera /dev/BU6424AF
     chown system camera /dev/CAM_CAL_DRV
 
     #MATV
@@ -344,6 +362,23 @@ on post-fs-data
     # mtk_sched
     chmod 0660 /dev/mtk_sched
     chown system media /dev/mtk_sched
+
+    # create the directory and symbol link file, wubin 20130321
+    mkdir /dev/block/platform 0770 root root
+    mkdir /dev/block/platform/mtk-msdc.1 0770 root root
+    mkdir /dev/block/platform/mtk-msdc.1/by-name 0770 root root
+
+    symlink /dev/block/mmcblk0p5 /dev/block/platform/mtk-msdc.1/by-name/emmc@android 
+    symlink /dev/block/mmcblk0p6 /dev/block/platform/mtk-msdc.1/by-name/emmc@cache 
+    symlink /dev/block/mmcblk0p1 /dev/block/platform/mtk-msdc.1/by-name/emmc@ebr1 
+    symlink /dev/block/mmcblk0p8 /dev/block/platform/mtk-msdc.1/by-name/emmc@fat 
+    symlink /dev/block/mmcblk0p2 /dev/block/platform/mtk-msdc.1/by-name/emmc@protect_f 
+    symlink /dev/block/mmcblk0p3 /dev/block/platform/mtk-msdc.1/by-name/emmc@protect_s 
+    symlink /dev/block/mmcblk0p4 /dev/block/platform/mtk-msdc.1/by-name/emmc@sec_ro 
+    symlink /dev/block/mmcblk0p7 /dev/block/platform/mtk-msdc.1/by-name/emmc@usrdata 
+
+   
+# End of adding by MTK drivers   
 
     # dhcp
     chown dhcp wifi /data/misc/dhcp
