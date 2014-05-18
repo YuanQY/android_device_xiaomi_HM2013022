@@ -64,11 +64,6 @@ PRODUCT_COPY_FILES += $(shell test -d $(LOCAL_PATH)/root/ &&  \
 	find $(LOCAL_PATH)/root/ -type f \
 	-printf '%p:root/%P ')
 
-#Copy all system prebuilt files.
-PRODUCT_COPY_FILES += $(shell test -d $(LOCAL_PATH)/prebuilt/ &&  \
-	find $(LOCAL_PATH)/prebuilt/ -type f \
-	-printf '%p:system/%P ')
-
 #ADDITIONAL_DEFAULT_PROPERTIES 
 PRODUCT_PROPERTY_OVERRIDES := \
 	ro.adb.secure=0 \
