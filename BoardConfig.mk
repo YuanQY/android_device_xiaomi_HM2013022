@@ -13,6 +13,7 @@
 # limitations under the License.
 
 DEVICE_FOLDER := device/xiaomi/HM2013022
+VENDOR_FOLDER := vendor/xiaomi/HM2013022/proprietary
 
 USE_CAMERA_STUB := true
 
@@ -45,7 +46,7 @@ TARGET_BOOTLOADER_BOARD_NAME := HM2013022
 #BOARD_CUSTOM_BOOTIMG_MK := $(DEVICE_FOLDER)/boot.mk
 
 # EGL settings
-BOARD_EGL_CFG := $(DEVICE_FOLDER)/prebuilt/lib/egl/egl.cfg
+BOARD_EGL_CFG := $(VENDOR_FOLDER)/lib/egl/egl.cfg
 USE_OPENGL_RENDERER := true
 BOARD_EGL_WORKAROUND_BUG_10194508 := true
 
