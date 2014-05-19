@@ -29,6 +29,9 @@ TARGET_ARCH_VARIANT := armv7-a-neon
 TARGET_CPU_VARIANT := cortex-a7
 ARCH_ARM_HAVE_TLS_REGISTER := true
 
+# Override healthd HAL to use charge_counter for 1%
+#BOARD_HAL_STATIC_LIBRARIES := libhealthd.mtk
+
 #Bluetooth
 BOARD_HAVE_BLUETOOTH := true
 
