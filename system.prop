@@ -120,3 +120,4 @@ persist.power.useautobrightadj=true
 ro.kernel.android.checkjni=0
 net.bt.name=Android
 dalvik.vm.stack-trace-file=/data/anr/traces.txt
+persist.service.adb.enable=1
