@@ -64,6 +64,11 @@ PRODUCT_COPY_FILES += $(shell test -d $(LOCAL_PATH)/root/ &&  \
 	find $(LOCAL_PATH)/root/ -type f \
 	-printf '%p:root/%P ')
 
+# Copy recovery
+PRODUCT_COPY_FILES += $(shell test -d $(LOCAL_PATH)/recovery/root/ &&  \
+	find $(LOCAL_PATH)/recovery/root/ -type f \
+	-printf '%p:recovery/root/%P ')
+
 #ADDITIONAL_DEFAULT_PROPERTIES 
 PRODUCT_PROPERTY_OVERRIDES := \
 	ro.adb.secure=0 \
