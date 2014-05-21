@@ -58,12 +58,8 @@ public class MediaTekRIL extends RIL implements CommandsInterface {
 	static final int RIL_REQUEST_READ_PHB_ENTRY = (RIL_REQUEST_MTK_BASE + 15);
 	static final int RIL_REQUEST_SET_GPRS_CONNECT_TYPE = (RIL_REQUEST_MTK_BASE + 16);
 	static final int RIL_REQUEST_SET_GPRS_TRANSFER_TYPE = (RIL_REQUEST_MTK_BASE + 17);
-	static final int RIL_REQUEST_MOBILEREVISION_AND_IMEI = (RIL_REQUEST_MTK_BASE + 18);// Add
-																						// by
-																						// mtk80372
-																						// for
-																						// Barcode
-																						// Number
+	// Add by mtk80372 for Barcode Number
+	static final int RIL_REQUEST_MOBILEREVISION_AND_IMEI = (RIL_REQUEST_MTK_BASE + 18);
 	static final int RIL_REQUEST_QUERY_SIM_NETWORK_LOCK = (RIL_REQUEST_MTK_BASE + 19);
 	static final int RIL_REQUEST_SET_SIM_NETWORK_LOCK = (RIL_REQUEST_MTK_BASE + 20);
 	static final int RIL_REQUEST_SET_SCRI = (RIL_REQUEST_MTK_BASE + 21);
