@@ -192,7 +192,7 @@ public class MediaTekRIL extends RIL implements CommandsInterface {
 
 	// TODO: Support multiSIM
 	// Sim IDs are 0 / 1
-	int mSimId = 0;
+	int mSimId = 1;
 
 	public MediaTekRIL(Context context, int networkMode, int cdmaSubscription) {
 		super(context, networkMode, cdmaSubscription, null);

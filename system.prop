@@ -121,3 +121,4 @@ ro.kernel.android.checkjni=0
 net.bt.name=Android
 dalvik.vm.stack-trace-file=/data/anr/traces.txt
 persist.service.adb.enable=1
+ro.telephony.default_network=1
