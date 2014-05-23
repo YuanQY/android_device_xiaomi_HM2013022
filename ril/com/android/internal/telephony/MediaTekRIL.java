@@ -195,25 +195,29 @@ public class MediaTekRIL extends RIL implements CommandsInterface {
 	int mSimId = 1;
 
 	public MediaTekRIL(Context context, int networkMode, int cdmaSubscription) {
-		super(context, networkMode, cdmaSubscription, null);
+		super(context, networkMode, cdmaSubscription, instanceId);
 	}
 
 	public MediaTekRIL(Context context, int networkMode, int cdmaSubscription,
 			Integer instanceId) {
-	  int telMode = SystemProperties.getInt("ril.telephony.mode", 0);
-	  switch(telMode) {
-	  	case 1:
-	  	case 3:
-	  		break;
-	  	case 2:
-	  	case 4:
-	  		if (1 == mSimId)
-	  			instanceId = 3;
-	  		else
-	  			instanceId = 4;
-	  		break;
-	  }
 		super(context, networkMode, cdmaSubscription, instanceId);
+		Rlog.d(LOG_TAG, "MediaTekRIL mInstanceId: " + mInstanceId);
+		if (null == instanceId) {
+			int telMode = SystemProperties.getInt("ril.telephony.mode", 0);
+			Integer instanceId = null;
+			switch (telMode) {
+			case 1:
+			case 3:
+				break;
+			case 2:
+			case 4:
+				if (1 == mSimId)
+					mInstanceId = 3;
+				else
+					mInstanceId = 4;
+				break;
+			}
+		}
 	}
 
 	public static byte[] hexStringToBytes(String s) {
