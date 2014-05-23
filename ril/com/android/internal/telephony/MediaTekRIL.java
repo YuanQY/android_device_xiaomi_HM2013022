@@ -195,16 +195,19 @@ public class MediaTekRIL extends RIL implements CommandsInterface {
 	int mSimId = 1;
 
 	public MediaTekRIL(Context context, int networkMode, int cdmaSubscription) {
-		super(context, networkMode, cdmaSubscription, instanceId);
+		super(context, networkMode, cdmaSubscription, null);
 	}
 
 	public MediaTekRIL(Context context, int networkMode, int cdmaSubscription,
 			Integer instanceId) {
 		super(context, networkMode, cdmaSubscription, instanceId);
+	}
+
+	@Override
+	protected void initializeInstanceId() {		
 		Rlog.d(LOG_TAG, "MediaTekRIL mInstanceId: " + mInstanceId);
-		if (null == instanceId) {
+		if (null == mInstanceId) {
 			int telMode = SystemProperties.getInt("ril.telephony.mode", 0);
-			Integer instanceId = null;
 			switch (telMode) {
 			case 1:
 			case 3:
@@ -218,8 +221,7 @@ public class MediaTekRIL extends RIL implements CommandsInterface {
 				break;
 			}
 		}
-	}
-
+  }
 	public static byte[] hexStringToBytes(String s) {
 		byte[] ret;
 
