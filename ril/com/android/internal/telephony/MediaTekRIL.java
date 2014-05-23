@@ -192,7 +192,7 @@ public class MediaTekRIL extends RIL implements CommandsInterface {
 
 	// TODO: Support multiSIM
 	// Sim IDs are 0 / 1
-	int mSimId = 1;
+	final int mSimId = 1;
 
 	public MediaTekRIL(Context context, int networkMode, int cdmaSubscription) {
 		super(context, networkMode, cdmaSubscription, null);
@@ -210,6 +210,9 @@ public class MediaTekRIL extends RIL implements CommandsInterface {
 			int telMode = SystemProperties.getInt("ril.telephony.mode", 0);
 			switch (telMode) {
 			case 1:
+				if (1 == mSimId)
+					mInstanceId = 3;
+				break;
 			case 3:
 				break;
 			case 2:
@@ -220,6 +223,8 @@ public class MediaTekRIL extends RIL implements CommandsInterface {
 					mInstanceId = 4;
 				break;
 			}
+			Rlog.d(LOG_TAG, "MediaTekRIL Change mInstanceId to " + mInstanceId +
+			 " base on ril.telephony.mode:" + telMode + " mSimId: " + mSimId);
 		}
   }
 	public static byte[] hexStringToBytes(String s) {
@@ -743,6 +748,11 @@ public class MediaTekRIL extends RIL implements CommandsInterface {
 					break; // RIL_REQUEST_IMS_REGISTRATION_STATE
 				case RIL_REQUEST_VOICE_RADIO_TECH:
 					ret = responseInts(p);
+					break;
+				case RIL_REQUEST_DUAL_SIM_MODE_SWITCH:
+				case RIL_REQUEST_SET_GPRS_CONNECT_TYPE:
+				case RIL_REQUEST_SET_GPRS_TRANSFER_TYPE:
+				  ret = responseVoid(p);
 					break;
 
 				default:
