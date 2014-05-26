@@ -190,6 +190,15 @@ public class MediaTekRIL extends RIL implements CommandsInterface {
 	static final int RIL_UNSOL_CNAP = (RIL_UNSOL_MTK_BASE + 30);
 	static final int RIL_UNSOL_STK_EVDL_CALL = (RIL_UNSOL_MTK_BASE + 31);
 
+	// Engle, add define for MTK, start
+	static final int RIL_REQUEST_SWITCH_HOLDING_AND_ACTIVE = 15;
+	static final int RIL_REQUEST_GSM_GET_BROADCAST_SMS_CONFIG = 89;
+	static final int RIL_REQUEST_GSM_SET_BROADCAST_SMS_CONFIG = 90;
+	static final int RIL_REQUEST_GSM_SMS_BROADCAST_ACTIVATION = 91;
+	static final int RIL_REQUEST_CDMA_GET_BROADCAST_SMS_CONFIG = 92;
+	static final int RIL_REQUEST_CDMA_SET_BROADCAST_SMS_CONFIG = 93;
+	static final int RIL_REQUEST_CDMA_SMS_BROADCAST_ACTIVATION = 94;
+	// Engle, add define for MTK, end
 	// TODO: Support multiSIM
 	// Sim IDs are 0 / 1
 	final int mSimId = 1;
@@ -295,7 +304,8 @@ public class MediaTekRIL extends RIL implements CommandsInterface {
 							hexStringToBytes(strings[i + 0].substring(4)),
 							"UTF-16");
 				} catch (UnsupportedEncodingException ex) {
-					Rlog.e(RILJ_LOG_TAG, "responseOperatorInfos UnsupportedEncodingException");
+					Rlog.e(RILJ_LOG_TAG,
+							"responseOperatorInfos UnsupportedEncodingException");
 				}
 			}
 
@@ -472,115 +482,115 @@ public class MediaTekRIL extends RIL implements CommandsInterface {
 					ret = responseVoid(p);
 					break;
 				case RIL_REQUEST_UDUB:
-					ret = responseVoid(p);
-					break;
-				case RIL_REQUEST_LAST_CALL_FAIL_CAUSE:
 					ret = responseInts(p);
 					break;
-				case RIL_REQUEST_SIGNAL_STRENGTH:
+				case RIL_REQUEST_LAST_CALL_FAIL_CAUSE:
 					ret = responseSignalStrength(p);
+					break;
+				case RIL_REQUEST_SIGNAL_STRENGTH:
+					ret = responseStrings(p);
 					break;
 				case RIL_REQUEST_VOICE_REGISTRATION_STATE:
 					ret = responseStrings(p);
 					break;
 				case RIL_REQUEST_DATA_REGISTRATION_STATE:
-					ret = responseStrings(p);
+					ret = responseOperator(p);
 					break;
 				case RIL_REQUEST_OPERATOR:
-					ret = responseOperator(p);
+					ret = responseVoid(p);
 					break;
 				case RIL_REQUEST_RADIO_POWER:
 					ret = responseVoid(p);
 					break;
 				case RIL_REQUEST_DTMF:
-					ret = responseVoid(p);
+					ret = responseSMS(p);
 					break;
 				case RIL_REQUEST_SEND_SMS:
 					ret = responseSMS(p);
 					break;
 				case RIL_REQUEST_SEND_SMS_EXPECT_MORE:
-					ret = responseSMS(p);
-					break;
-				case RIL_REQUEST_SETUP_DATA_CALL:
 					ret = responseSetupDataCall(p);
 					break;
-				case RIL_REQUEST_SIM_IO:
+				case RIL_REQUEST_SETUP_DATA_CALL:
 					ret = responseICC_IO(p);
+					break;
+				case RIL_REQUEST_SIM_IO:
+					ret = responseVoid(p);
 					break;
 				case RIL_REQUEST_SEND_USSD:
 					ret = responseVoid(p);
 					break;
 				case RIL_REQUEST_CANCEL_USSD:
-					ret = responseVoid(p);
+					ret = responseInts(p);
 					break;
 				case RIL_REQUEST_GET_CLIR:
-					ret = responseInts(p);
+					ret = responseVoid(p);
 					break;
 				case RIL_REQUEST_SET_CLIR:
-					ret = responseVoid(p);
-					break;
-				case RIL_REQUEST_QUERY_CALL_FORWARD_STATUS:
 					ret = responseCallForward(p);
 					break;
-				case RIL_REQUEST_SET_CALL_FORWARD:
+				case RIL_REQUEST_QUERY_CALL_FORWARD_STATUS:
 					ret = responseVoid(p);
 					break;
-				case RIL_REQUEST_QUERY_CALL_WAITING:
+				case RIL_REQUEST_SET_CALL_FORWARD:
 					ret = responseInts(p);
+					break;
+				case RIL_REQUEST_QUERY_CALL_WAITING:
+					ret = responseVoid(p);
 					break;
 				case RIL_REQUEST_SET_CALL_WAITING:
 					ret = responseVoid(p);
 					break;
 				case RIL_REQUEST_SMS_ACKNOWLEDGE:
-					ret = responseVoid(p);
+					ret = responseString(p);
 					break;
 				case RIL_REQUEST_GET_IMEI:
 					ret = responseString(p);
 					break;
 				case RIL_REQUEST_GET_IMEISV:
-					ret = responseString(p);
+					ret = responseVoid(p);
 					break;
 				case RIL_REQUEST_ANSWER:
 					ret = responseVoid(p);
 					break;
 				case RIL_REQUEST_DEACTIVATE_DATA_CALL:
-					ret = responseVoid(p);
+					ret = responseInts(p);
 					break;
 				case RIL_REQUEST_QUERY_FACILITY_LOCK:
 					ret = responseInts(p);
 					break;
 				case RIL_REQUEST_SET_FACILITY_LOCK:
-					ret = responseInts(p);
-					break;
-				case RIL_REQUEST_CHANGE_BARRING_PASSWORD:
 					ret = responseVoid(p);
 					break;
-				case RIL_REQUEST_QUERY_NETWORK_SELECTION_MODE:
+				case RIL_REQUEST_CHANGE_BARRING_PASSWORD:
 					ret = responseInts(p);
+					break;
+				case RIL_REQUEST_QUERY_NETWORK_SELECTION_MODE:
+					ret = responseVoid(p);
 					break;
 				case RIL_REQUEST_SET_NETWORK_SELECTION_AUTOMATIC:
 					ret = responseVoid(p);
 					break;
 				case RIL_REQUEST_SET_NETWORK_SELECTION_MANUAL:
-					ret = responseVoid(p);
+					ret = responseOperatorInfos(p);
 					break;
 				case RIL_REQUEST_QUERY_AVAILABLE_NETWORKS:
-					ret = responseOperatorInfos(p);
+					ret = responseVoid(p);
 					break;
 				case RIL_REQUEST_DTMF_START:
 					ret = responseVoid(p);
 					break;
 				case RIL_REQUEST_DTMF_STOP:
-					ret = responseVoid(p);
+					ret = responseString(p);
 					break;
 				case RIL_REQUEST_BASEBAND_VERSION:
-					ret = responseString(p);
+					ret = responseVoid(p);
 					break;
 				case RIL_REQUEST_SEPARATE_CONNECTION:
 					ret = responseVoid(p);
 					break;
 				case RIL_REQUEST_SET_MUTE:
-					ret = responseVoid(p);
+					ret = responseInts(p);
 					break;
 				case RIL_REQUEST_GET_MUTE:
 					ret = responseInts(p);
@@ -589,64 +599,64 @@ public class MediaTekRIL extends RIL implements CommandsInterface {
 					ret = responseInts(p);
 					break;
 				case RIL_REQUEST_LAST_DATA_CALL_FAIL_CAUSE:
-					ret = responseInts(p);
-					break;
-				case RIL_REQUEST_DATA_CALL_LIST:
 					ret = responseDataCallList(p);
 					break;
-				case RIL_REQUEST_RESET_RADIO:
+				case RIL_REQUEST_DATA_CALL_LIST:
 					ret = responseVoid(p);
 					break;
-				case RIL_REQUEST_OEM_HOOK_RAW:
+				case RIL_REQUEST_RESET_RADIO:
 					ret = responseRaw(p);
 					break;
-				case RIL_REQUEST_OEM_HOOK_STRINGS:
+				case RIL_REQUEST_OEM_HOOK_RAW:
 					ret = responseStrings(p);
+					break;
+				case RIL_REQUEST_OEM_HOOK_STRINGS:
+					ret = responseVoid(p);
 					break;
 				case RIL_REQUEST_SCREEN_STATE:
 					ret = responseVoid(p);
 					break;
 				case RIL_REQUEST_SET_SUPP_SVC_NOTIFICATION:
-					ret = responseVoid(p);
+					ret = responseInts(p);
 					break;
 				case RIL_REQUEST_WRITE_SMS_TO_SIM:
-					ret = responseInts(p);
+					ret = responseVoid(p);
 					break;
 				case RIL_REQUEST_DELETE_SMS_ON_SIM:
 					ret = responseVoid(p);
 					break;
 				case RIL_REQUEST_SET_BAND_MODE:
-					ret = responseVoid(p);
+					ret = responseInts(p);
 					break;
 				case RIL_REQUEST_QUERY_AVAILABLE_BAND_MODE:
-					ret = responseInts(p);
+					ret = responseString(p);
 					break;
 				case RIL_REQUEST_STK_GET_PROFILE:
-					ret = responseString(p);
+					ret = responseVoid(p);
 					break;
 				case RIL_REQUEST_STK_SET_PROFILE:
-					ret = responseVoid(p);
-					break;
-				case RIL_REQUEST_STK_SEND_ENVELOPE_COMMAND:
 					ret = responseString(p);
 					break;
-				case RIL_REQUEST_STK_SEND_TERMINAL_RESPONSE:
+				case RIL_REQUEST_STK_SEND_ENVELOPE_COMMAND:
 					ret = responseVoid(p);
 					break;
-				case RIL_REQUEST_STK_HANDLE_CALL_SETUP_REQUESTED_FROM_SIM:
+				case RIL_REQUEST_STK_SEND_TERMINAL_RESPONSE:
 					ret = responseInts(p);
+					break;
+				case RIL_REQUEST_STK_HANDLE_CALL_SETUP_REQUESTED_FROM_SIM:
+					ret = responseVoid(p);
 					break;
 				case RIL_REQUEST_EXPLICIT_CALL_TRANSFER:
 					ret = responseVoid(p);
 					break;
 				case RIL_REQUEST_SET_PREFERRED_NETWORK_TYPE:
-					ret = responseVoid(p);
-					break;
-				case RIL_REQUEST_GET_PREFERRED_NETWORK_TYPE:
 					ret = responseGetPreferredNetworkType(p);
 					break;
-				case RIL_REQUEST_GET_NEIGHBORING_CELL_IDS:
+				case RIL_REQUEST_GET_PREFERRED_NETWORK_TYPE:
 					ret = responseCellList(p);
+					break;
+				case RIL_REQUEST_GET_NEIGHBORING_CELL_IDS:
+					ret = responseVoid(p);
 					break;
 				case RIL_REQUEST_SET_LOCATION_UPDATES:
 					ret = responseVoid(p);
@@ -655,22 +665,22 @@ public class MediaTekRIL extends RIL implements CommandsInterface {
 					ret = responseVoid(p);
 					break;
 				case RIL_REQUEST_CDMA_SET_ROAMING_PREFERENCE:
-					ret = responseVoid(p);
+					ret = responseInts(p);
 					break;
 				case RIL_REQUEST_CDMA_QUERY_ROAMING_PREFERENCE:
-					ret = responseInts(p);
+					ret = responseVoid(p);
 					break;
 				case RIL_REQUEST_SET_TTY_MODE:
-					ret = responseVoid(p);
+					ret = responseInts(p);
 					break;
 				case RIL_REQUEST_QUERY_TTY_MODE:
-					ret = responseInts(p);
-					break;
-				case RIL_REQUEST_CDMA_SET_PREFERRED_VOICE_PRIVACY_MODE:
 					ret = responseVoid(p);
 					break;
-				case RIL_REQUEST_CDMA_QUERY_PREFERRED_VOICE_PRIVACY_MODE:
+				case RIL_REQUEST_CDMA_SET_PREFERRED_VOICE_PRIVACY_MODE:
 					ret = responseInts(p);
+					break;
+				case RIL_REQUEST_CDMA_QUERY_PREFERRED_VOICE_PRIVACY_MODE:
+					ret = responseVoid(p);
 					break;
 				case RIL_REQUEST_CDMA_FLASH:
 					ret = responseVoid(p);
@@ -678,88 +688,92 @@ public class MediaTekRIL extends RIL implements CommandsInterface {
 				case RIL_REQUEST_CDMA_BURST_DTMF:
 					ret = responseVoid(p);
 					break;
-				case RIL_REQUEST_CDMA_SEND_SMS:
+				case RIL_REQUEST_CDMA_VALIDATE_AND_WRITE_AKEY:
 					ret = responseSMS(p);
 					break;
-				case RIL_REQUEST_CDMA_SMS_ACKNOWLEDGE:
+				case RIL_REQUEST_CDMA_SEND_SMS:
 					ret = responseVoid(p);
 					break;
-				case RIL_REQUEST_GSM_GET_BROADCAST_CONFIG:
+				case RIL_REQUEST_CDMA_SMS_ACKNOWLEDGE:
 					ret = responseGmsBroadcastConfig(p);
 					break;
-				case RIL_REQUEST_GSM_SET_BROADCAST_CONFIG:
+				case RIL_REQUEST_GSM_GET_BROADCAST_SMS_CONFIG:
 					ret = responseVoid(p);
 					break;
-				case RIL_REQUEST_GSM_BROADCAST_ACTIVATION:
+				case RIL_REQUEST_GSM_SET_BROADCAST_SMS_CONFIG:
 					ret = responseVoid(p);
 					break;
-				case RIL_REQUEST_CDMA_GET_BROADCAST_CONFIG:
+				case RIL_REQUEST_GSM_SMS_BROADCAST_ACTIVATION:
 					ret = responseCdmaBroadcastConfig(p);
 					break;
-				case RIL_REQUEST_CDMA_SET_BROADCAST_CONFIG:
+				case RIL_REQUEST_CDMA_GET_BROADCAST_SMS_CONFIG:
 					ret = responseVoid(p);
 					break;
-				case RIL_REQUEST_CDMA_BROADCAST_ACTIVATION:
+				case RIL_REQUEST_CDMA_SET_BROADCAST_SMS_CONFIG:
 					ret = responseVoid(p);
 					break;
-				case RIL_REQUEST_CDMA_VALIDATE_AND_WRITE_AKEY:
-					ret = responseVoid(p);
+				case RIL_REQUEST_CDMA_SMS_BROADCAST_ACTIVATION:
+					ret = responseStrings(p);
 					break;
 				case RIL_REQUEST_CDMA_SUBSCRIPTION:
-					ret = responseStrings(p);
-					break;
-				case RIL_REQUEST_CDMA_WRITE_SMS_TO_RUIM:
 					ret = responseInts(p);
 					break;
-				case RIL_REQUEST_CDMA_DELETE_SMS_ON_RUIM:
+				case RIL_REQUEST_CDMA_WRITE_SMS_TO_RUIM:
 					ret = responseVoid(p);
 					break;
-				case RIL_REQUEST_DEVICE_IDENTITY:
+				case RIL_REQUEST_CDMA_DELETE_SMS_ON_RUIM:
 					ret = responseStrings(p);
 					break;
-				case RIL_REQUEST_GET_SMSC_ADDRESS:
-					ret = responseString(p);
-					break;
-				case RIL_REQUEST_SET_SMSC_ADDRESS:
+				case RIL_REQUEST_DEVICE_IDENTITY:
 					ret = responseVoid(p);
 					break;
 				case RIL_REQUEST_EXIT_EMERGENCY_CALLBACK_MODE:
+					ret = responseString(p);
+					break;
+				case RIL_REQUEST_GET_SMSC_ADDRESS:
+					ret = responseVoid(p);
+					break;
+				case RIL_REQUEST_SET_SMSC_ADDRESS:
 					ret = responseVoid(p);
 					break;
 				case RIL_REQUEST_REPORT_SMS_MEMORY_STATUS:
 					ret = responseVoid(p);
 					break;
 				case RIL_REQUEST_REPORT_STK_SERVICE_IS_RUNNING:
+					ret = responseInts(p);
+					break;
+				case RIL_REQUEST_CDMA_GET_SUBSCRIPTION_SOURCE:
+					ret = responseString(p);
+					break;
+				case RIL_REQUEST_ISIM_AUTHENTICATION:
 					ret = responseVoid(p);
 					break;
-				case 104:
+				case RIL_REQUEST_ACKNOWLEDGE_INCOMING_GSM_SMS_WITH_PDU:
+					ret = responseICC_IO(p);
+					break;
+				case RIL_REQUEST_STK_SEND_ENVELOPE_WITH_STATUS:
 					ret = responseInts(p);
-					break; // RIL_REQUEST_VOICE_RADIO_TECH
-				case 105:
-					ret = responseInts(p);
-					break; // RIL_REQUEST_CDMA_GET_SUBSCRIPTION_SOURCE
-				case 106:
-					ret = responseStrings(p);
-					break; // RIL_REQUEST_CDMA_PRL_VERSION
-				case 107:
-					ret = responseInts(p);
-					break; // RIL_REQUEST_IMS_REGISTRATION_STATE
+					break;
 				case RIL_REQUEST_VOICE_RADIO_TECH:
+					ret = responseGetNitzTime(p);
+					break;
+				case 146:
 					ret = responseInts(p);
 					break;
-				// Engle, MTK start
-
-				case RIL_REQUEST_HANGUP_ALL:
+				case 500:
 					ret = responseVoid(p);
+					break;
+				case RIL_REQUEST_HANGUP_ALL:
+					ret = responseInts(p);
 					break;
 				case RIL_REQUEST_GET_COLP:
-					ret = responseInts(p);
-					break;
-				case RIL_REQUEST_SET_COLP:
 					ret = responseVoid(p);
 					break;
-				case RIL_REQUEST_GET_COLR:
+				case RIL_REQUEST_SET_COLP:
 					ret = responseInts(p);
+					break;
+				case RIL_REQUEST_GET_COLR:
+					ret = responseString(p);
 					break;
 				case RIL_REQUEST_GET_CCM:
 					ret = responseString(p);
@@ -768,10 +782,10 @@ public class MediaTekRIL extends RIL implements CommandsInterface {
 					ret = responseString(p);
 					break;
 				case RIL_REQUEST_GET_ACMMAX:
-					ret = responseString(p);
+					ret = responseStrings(p);
 					break;
 				case RIL_REQUEST_GET_PPU_AND_CURRENCY:
-					ret = responseStrings(p);
+					ret = responseVoid(p);
 					break;
 				case RIL_REQUEST_SET_ACMMAX:
 					ret = responseVoid(p);
@@ -786,55 +800,55 @@ public class MediaTekRIL extends RIL implements CommandsInterface {
 					ret = responseVoid(p);
 					break;
 				case RIL_REQUEST_DUAL_SIM_MODE_SWITCH:
-					ret = responseVoid(p);
-					break;
-				case RIL_REQUEST_QUERY_PHB_STORAGE_INFO:
 					ret = responseInts(p);
 					break;
-				case RIL_REQUEST_WRITE_PHB_ENTRY:
+				case RIL_REQUEST_QUERY_PHB_STORAGE_INFO:
 					ret = responseVoid(p);
 					break;
-				case RIL_REQUEST_READ_PHB_ENTRY:
+				case RIL_REQUEST_WRITE_PHB_ENTRY:
 					ret = responsePhbEntries(p);
+					break;
+				case RIL_REQUEST_READ_PHB_ENTRY:
+					ret = responseVoid(p);
 					break;
 				case RIL_REQUEST_SET_GPRS_CONNECT_TYPE:
 					ret = responseVoid(p);
 					break;
 				case RIL_REQUEST_SET_GPRS_TRANSFER_TYPE:
-					ret = responseVoid(p);
+					ret = responseString(p);
 					break;
 				case RIL_REQUEST_MOBILEREVISION_AND_IMEI:
-					ret = responseString(p);
+					ret = responseInts(p);
 					break;
 				case RIL_REQUEST_QUERY_SIM_NETWORK_LOCK:
 					ret = responseInts(p);
 					break;
 				case RIL_REQUEST_SET_SIM_NETWORK_LOCK:
-					ret = responseInts(p);
+					ret = responseVoid(p);
 					break;
 				case RIL_REQUEST_SET_SCRI:
 					ret = responseVoid(p);
 					break;
 				case RIL_REQUEST_VT_DIAL:
-					ret = responseVoid(p);
-					break;
-				case RIL_REQUEST_VOICE_ACCEPT:
 					ret = responseString(p);
 					break;
-				case RIL_REQUEST_BTSIM_CONNECT:
+				case RIL_REQUEST_VOICE_ACCEPT:
 					ret = responseVoid(p);
+					break;
+				case RIL_REQUEST_BTSIM_CONNECT:
+					ret = responseString(p);
 					break;
 				case RIL_REQUEST_BTSIM_DISCONNECT_OR_POWEROFF:
 					ret = responseString(p);
 					break;
 				case RIL_REQUEST_BTSIM_POWERON_OR_RESETSIM:
-					ret = responseString(p);
+					ret = responseVoid(p);
 					break;
 				case RIL_REQUEST_BTSIM_TRANSFERAPDU:
 					ret = responseVoid(p);
 					break;
 				case RIL_REQUEST_EMERGENCY_DIAL:
-					ret = responseVoid(p);
+					ret = responseString(p);
 					break;
 				case RIL_REQUEST_SET_NETWORK_SELECTION_MANUAL_WITH_ACT:
 					ret = responseString(p);
@@ -843,16 +857,16 @@ public class MediaTekRIL extends RIL implements CommandsInterface {
 					ret = responseString(p);
 					break;
 				case RIL_REQUEST_SIM_AUTHENTICATION:
-					ret = responseString(p);
+					ret = responseVoid(p);
 					break;
 				case RIL_REQUEST_USIM_AUTHENTICATION:
 					ret = responseVoid(p);
 					break;
 				case RIL_REQUEST_RADIO_POWERON:
-					ret = responseVoid(p);
+					ret = responseSimSmsMemoryStatus(p);
 					break;
 				case RIL_REQUEST_GET_SMS_SIM_MEM_STATUS:
-					ret = responseSimSmsMemoryStatus(p);
+					ret = responseVoid(p);
 					break;
 				case RIL_REQUEST_FORCE_RELEASE_CALL:
 					ret = responseVoid(p);
@@ -861,7 +875,7 @@ public class MediaTekRIL extends RIL implements CommandsInterface {
 					ret = responseVoid(p);
 					break;
 				case RIL_REQUEST_REPLACE_VT_CALL:
-					ret = responseVoid(p);
+					ret = responseInts(p);
 					break;
 				case RIL_REQUEST_GET_3G_CAPABILITY:
 					ret = responseInts(p);
@@ -870,28 +884,28 @@ public class MediaTekRIL extends RIL implements CommandsInterface {
 					ret = responseInts(p);
 					break;
 				case RIL_REQUEST_GET_POL_CAPABILITY:
-					ret = responseInts(p);
-					break;
-				case RIL_REQUEST_GET_POL_LIST:
 					ret = responseNetworkInfoWithActs(p);
 					break;
-				case RIL_REQUEST_SET_POL_ENTRY:
+				case RIL_REQUEST_GET_POL_LIST:
 					ret = responseVoid(p);
 					break;
-				case RIL_REQUEST_QUERY_UPB_CAPABILITY:
+				case RIL_REQUEST_SET_POL_ENTRY:
 					ret = responseInts(p);
+					break;
+				case RIL_REQUEST_QUERY_UPB_CAPABILITY:
+					ret = responseVoid(p);
 					break;
 				case RIL_REQUEST_EDIT_UPB_ENTRY:
 					ret = responseVoid(p);
 					break;
 				case RIL_REQUEST_DELETE_UPB_ENTRY:
-					ret = responseVoid(p);
-					break;
-				case RIL_REQUEST_READ_UPB_GAS_LIST:
 					ret = responseStrings(p);
 					break;
-				case RIL_REQUEST_READ_UPB_GRP:
+				case RIL_REQUEST_READ_UPB_GAS_LIST:
 					ret = responseInts(p);
+					break;
+				case RIL_REQUEST_READ_UPB_GRP:
+					ret = responseVoid(p);
 					break;
 				case RIL_REQUEST_WRITE_UPB_GRP:
 					ret = responseVoid(p);
@@ -903,7 +917,7 @@ public class MediaTekRIL extends RIL implements CommandsInterface {
 					ret = responseVoid(p);
 					break;
 				case RIL_REQUEST_SET_SIM_RECOVERY_ON:
-					ret = responseVoid(p);
+					ret = responseInts(p);
 					break;
 				case RIL_REQUEST_GET_SIM_RECOVERY_ON:
 					ret = responseInts(p);
@@ -912,70 +926,65 @@ public class MediaTekRIL extends RIL implements CommandsInterface {
 					ret = responseInts(p);
 					break;
 				case RIL_REQUEST_DETECT_SIM_MISSING:
-					ret = responseInts(p);
+					ret = responseString(p);
 					break;
 				case RIL_REQUEST_GET_CALIBRATION_DATA:
-					ret = responseString(p);
+					ret = responseInts(p);
 					break;
 				case RIL_REQUEST_GET_PHB_STRING_LENGTH:
-					ret = responseInts(p);
-					break;
-				case RIL_REQUEST_GET_PHB_MEM_STORAGE:
 					ret = responseGetPhbMemStorage(p);
 					break;
-				case RIL_REQUEST_SET_PHB_MEM_STORAGE:
+				case RIL_REQUEST_GET_PHB_MEM_STORAGE:
 					ret = responseVoid(p);
 					break;
-				case RIL_REQUEST_READ_PHB_ENTRY_EXT:
+				case RIL_REQUEST_SET_PHB_MEM_STORAGE:
 					ret = responseReadPhbEntryExt(p);
 					break;
-				case RIL_REQUEST_WRITE_PHB_ENTRY_EXT:
+				case RIL_REQUEST_READ_PHB_ENTRY_EXT:
 					ret = responseVoid(p);
 					break;
-				case RIL_REQUEST_GET_SMS_PARAMS:
+				case RIL_REQUEST_WRITE_PHB_ENTRY_EXT:
 					ret = responseSmsParams(p);
 					break;
-				case RIL_REQUEST_SET_SMS_PARAMS:
+				case RIL_REQUEST_GET_SMS_PARAMS:
 					ret = responseVoid(p);
+					break;
+				case RIL_REQUEST_SET_SMS_PARAMS:
+					ret = responseICC_IO(p);
 					break;
 				case RIL_REQUEST_SIM_TRANSMIT_BASIC:
-					ret = responseICC_IO(p);
-					break;
-				case RIL_REQUEST_SIM_OPEN_CHANNEL:
 					ret = responseInts(p);
 					break;
-				case RIL_REQUEST_SIM_CLOSE_CHANNEL:
+				case RIL_REQUEST_SIM_OPEN_CHANNEL:
 					ret = responseVoid(p);
 					break;
-				case RIL_REQUEST_SIM_TRANSMIT_CHANNEL:
+				case RIL_REQUEST_SIM_CLOSE_CHANNEL:
 					ret = responseICC_IO(p);
 					break;
-				case RIL_REQUEST_SIM_GET_ATR:
+				case RIL_REQUEST_SIM_TRANSMIT_CHANNEL:
 					ret = responseString(p);
+					break;
+				case RIL_REQUEST_SIM_GET_ATR:
+					ret = responseVoid(p);
 					break;
 				case RIL_REQUEST_SET_CB_CHANNEL_CONFIG_INFO:
 					ret = responseVoid(p);
 					break;
 				case RIL_REQUEST_SET_CB_LANGUAGE_CONFIG_INFO:
-					ret = responseVoid(p);
+					ret = responseCbConfig(p);
 					break;
 				case RIL_REQUEST_GET_CB_CONFIG_INFO:
-					ret = responseCbConfig(p);
+					ret = responseVoid(p);
 					break;
 				case RIL_REQUEST_SET_ALL_CB_LANGUAGE_ON:
 					ret = responseVoid(p);
 					break;
 				case RIL_REQUEST_SET_ETWS:
-					ret = responseVoid(p);
-					break;
-				case RIL_REQUEST_SET_FD_MODE:
 					ret = responseInts(p);
 					break;
-				case RIL_REQUEST_SIM_OPEN_CHANNEL_WITH_SW:
+				case RIL_REQUEST_SET_FD_MODE:
 					ret = responseICC_IO(p);
 					break;
-
-				// Engle, MTK end
 				default:
 					throw new RuntimeException(
 							"Unrecognized solicited response: " + rr.mRequest);
@@ -1221,9 +1230,9 @@ public class MediaTekRIL extends RIL implements CommandsInterface {
 				&& (response[0].equals("") || response[0].equals(response[2]))) {
 			Operators init = new Operators();
 			String temp = init.unOptimizedOperatorReplace(response[2]);
-			Rlog.d(RILJ_LOG_TAG, "lookup RIL responseOperator() " + response[2] + " gave "
-					+ temp + " was " + response[0] + "/" + response[1]
-					+ " before.");
+			Rlog.d(RILJ_LOG_TAG, "lookup RIL responseOperator() " + response[2]
+					+ " gave " + temp + " was " + response[0] + "/"
+					+ response[1] + " before.");
 			response[0] = temp;
 			response[1] = temp;
 		}
@@ -1421,5 +1430,14 @@ public class MediaTekRIL extends RIL implements CommandsInterface {
 	private Object responseCbConfig(Parcel p) {
 		Rlog.e(RILJ_LOG_TAG, "TODO responsePhbEntries");
 		return null;
+	}
+
+	private Object responseGetNitzTime(Parcel p) {
+		Object[] arrayOfObject = new Object[2];
+		String result = p.readString();
+		long response = p.readLong();
+		arrayOfObject[0] = result;
+		arrayOfObject[1] = Long.valueOf(response);
+		return arrayOfObject;
 	}
 }
