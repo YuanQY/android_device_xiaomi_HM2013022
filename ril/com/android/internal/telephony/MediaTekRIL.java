@@ -295,13 +295,13 @@ public class MediaTekRIL extends RIL implements CommandsInterface {
 		ret = new ArrayList<OperatorInfo>(strings.length / 5);
 
 		for (int i = 0; i < strings.length; i += 5) {
-			if ((strings[i + 0] != null)
-					&& (strings[i + 0].startsWith("uCs2") == true)) {
-				riljLog("responseOperatorInfos handling UCS2 format name");
+			if ((strings[i] != null)
+					&& (strings[i].startsWith("uCs2") == true)) {
+				Rlog.d(RILJ_LOG_TAG, "responseOperatorInfos handling UCS2 format name");
 
 				try {
-					strings[i + 0] = new String(
-							hexStringToBytes(strings[i + 0].substring(4)),
+					strings[i] = new String(
+							hexStringToBytes(strings[i].substring(4)),
 							"UTF-16");
 				} catch (UnsupportedEncodingException ex) {
 					Rlog.e(RILJ_LOG_TAG,
@@ -342,7 +342,7 @@ public class MediaTekRIL extends RIL implements CommandsInterface {
 							.equals(strings[i + 2]))) {
 				Operators init = new Operators();
 				String temp = init.unOptimizedOperatorReplace(strings[i + 2]);
-				riljLog("lookup RIL responseOperatorInfos() " + strings[i + 2]
+				Rlog.d(RILJ_LOG_TAG, "lookup RIL responseOperatorInfos() " + strings[i + 2]
 						+ " gave " + temp);
 				strings[i] = temp;
 				strings[i + 1] = temp;
@@ -359,11 +359,11 @@ public class MediaTekRIL extends RIL implements CommandsInterface {
 			Rlog.d(LOG_TAG, "property_name=" + property_name
 					+ ", basebandCapability=" + basebandCapability);
 			if (3 < basebandCapability) {
-				strings[i + 0] = strings[i + 0].concat(" " + strings[i + 4]);
+				strings[i] = strings[i].concat(" " + strings[i + 4]);
 				strings[i + 1] = strings[i + 1].concat(" " + strings[i + 4]);
 			}
 
-			ret.add(new OperatorInfo(strings[i + 0], strings[i + 1],
+			ret.add(new OperatorInfo(strings[i], strings[i + 1],
 					strings[i + 2], strings[i + 3]));
 		}
 
@@ -1203,9 +1203,7 @@ public class MediaTekRIL extends RIL implements CommandsInterface {
 
 	private Object responseOperator(Parcel p) {
 		int num;
-		String response[] = null;
-
-		response = p.readStringArray();
+		String response[] = p.readStringArray();
 
 		if (false) {
 			num = p.readInt();
