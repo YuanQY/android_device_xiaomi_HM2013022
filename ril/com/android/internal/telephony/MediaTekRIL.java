@@ -1292,10 +1292,7 @@ public class MediaTekRIL extends RIL implements CommandsInterface {
 	}
 
 	protected Object responseSignalStrength(Parcel p) {
-		SignalStrength s = SignalStrength.makeSignalStrengthFromRilParcel(p);
-		return new SignalStrength(s.getGsmSignalStrength(),
-				s.getGsmBitErrorRate(), s.getCdmaDbm(), s.getCdmaEcio(),
-				s.getEvdoDbm(), s.getEvdoEcio(), s.getEvdoSnr(), true);
+		return new SignalStrength(p);
 	}
 
 	private void setRadioStateFromRILInt(int stateCode) {
