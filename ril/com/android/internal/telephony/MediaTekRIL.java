@@ -1010,7 +1010,7 @@ public class MediaTekRIL extends RIL implements CommandsInterface {
                 if (RILJ_LOGD) unsljLogRet(response, ret);
                 // intercept and send GPRS_TRANSFER_TYPE and
                 // GPRS_CONNECT_TYPE to RIL
-                // setRadioStateFromRILInt(p.readInt());
+                setRadioStateFromRILInt(p.readInt());
                 rewindAndReplace = true;
                 newResponseCode = RIL_UNSOL_RESPONSE_RADIO_STATE_CHANGED;
                 break;
@@ -1047,12 +1047,12 @@ public class MediaTekRIL extends RIL implements CommandsInterface {
                 if (RILJ_LOGD) unsljLogRet(response, ret);
                 rewindAndReplace = true;
                 newResponseCode = RIL_UNSOL_RESPONSE_SIM_STATUS_CHANGED;
-                break;
+                break;/*
             case RIL_UNSOL_RADIO_TEMPORARILY_UNAVAILABLE:
                 if (RILJ_LOGD) unsljLogRet(response, ret);
                 rewindAndReplace = true;
                 newResponseCode = RIL_UNSOL_RESPONSE_RADIO_STATE_CHANGED;
-                break;
+                break;*/
             case RIL_UNSOL_ME_SMS_STORAGE_FULL:
                 if (RILJ_LOGD) unsljLogRet(response, ret);
                 Rlog.e(LOG_TAG, "TODO  RIL_UNSOL_ME_SMS_STORAGE_FULL");
@@ -1060,7 +1060,7 @@ public class MediaTekRIL extends RIL implements CommandsInterface {
             case RIL_UNSOL_SMS_READY_NOTIFICATION:
                 if (RILJ_LOGD) unsljLogRet(response, ret);
                 rewindAndReplace = true;
-                newResponseCode = RIL_UNSOL_SMS_READY_NOTIFICATION;
+                newResponseCode = RIL_UNSOL_RESPONSE_NEW_SMS_STATUS_REPORT;
                 break;
             case RIL_UNSOL_SCRI_RESULT:
                 Rlog.e(LOG_TAG, "TODO  RIL_UNSOL_SCRI_RESULT");
@@ -1240,7 +1240,7 @@ public class MediaTekRIL extends RIL implements CommandsInterface {
 		rr.mParcel.writeString(protocol);
 		rr.mParcel.writeString("1");
 
-		Rlog.d(RILJ_LOG_TAG, rr.serialString() + "> "
+		Rlog.d(LOG_TAG, rr.serialString() + "> "
 				+ requestToString(rr.mRequest) + " " + radioTechnology + " "
 				+ profile + " " + apn + " " + user + " " + password + " "
 				+ authType + " " + protocol + "1");
@@ -1254,43 +1254,92 @@ public class MediaTekRIL extends RIL implements CommandsInterface {
 
 	private void setRadioStateFromRILInt(int stateCode) {
 		switch (stateCode) {
-		case 0: // RADIO_OFF
-		case 1: // RADIO_UNAVAILABLE
-		case 2: // SIM_NOT_READY
-		case 3: // SIM_LOCKED_OR_ABSENT;
-    case 4: // SIM_READY;
-    case 5: // RUIM_NOT_READY;
-    case 6: // RUIM_READY;
-    case 7: // RUIM_LOCKED_OR_ABSENT;
-    case 8: // NV_NOT_READY;
-    case 9: // NV_READY;
-    case 10: // RADIO_ON;
-			break; // radio off
-		default: {
-			RILRequest rr = RILRequest.obtain(
-					RIL_REQUEST_SET_GPRS_TRANSFER_TYPE, null);
-
-			if (RILJ_LOGD)
-				riljLog(rr.serialString() + "> " + requestToString(rr.mRequest));
-
-			rr.mParcel.writeInt(1);
-			rr.mParcel.writeInt(1);
-
-			send(rr);
-		}
-			{
-				RILRequest rr = RILRequest.obtain(
-						RIL_REQUEST_SET_GPRS_CONNECT_TYPE, null);
-
-				if (RILJ_LOGD)
-					riljLog(rr.serialString() + "> "
-							+ requestToString(rr.mRequest));
-
-				rr.mParcel.writeInt(1);
-				rr.mParcel.writeInt(1);
-
-				send(rr);
-			}
+			case 0: // RADIO_OFF
+			    Rlog.d(LOG_TAG, "Set Radio State to RADIO_OFF");
+			    break;
+			case 1: // RADIO_UNAVAILABLE
+			    Rlog.d(LOG_TAG, "Set Radio State to RADIO_UNAVAILABLE");
+			    break;
+		  case 2: // SIM_NOT_READY
+		  		Rlog.d(LOG_TAG, "Set Radio State to SIM_NOT_READY");
+			    break;
+			case 3: // SIM_LOCKED_OR_ABSENT;
+			    Rlog.d(LOG_TAG, "Set Radio State to SIM_LOCKED_OR_ABSENT");
+			    {
+						RILRequest rr = RILRequest.obtain(
+								RIL_REQUEST_SET_GPRS_TRANSFER_TYPE, null);
+			
+						if (RILJ_LOGD)
+							riljLog(rr.serialString() + "> " + requestToString(rr.mRequest));
+			
+						rr.mParcel.writeInt(1);
+						rr.mParcel.writeInt(1);
+			
+						send(rr);
+					}
+					{
+						RILRequest rr = RILRequest.obtain(
+								RIL_REQUEST_SET_GPRS_CONNECT_TYPE, null);
+		
+						if (RILJ_LOGD)
+							riljLog(rr.serialString() + "> "
+									+ requestToString(rr.mRequest));
+		
+						rr.mParcel.writeInt(1);
+						rr.mParcel.writeInt(1);
+		
+						send(rr);
+					}
+			    break;
+	    case 4: // SIM_READY;
+	        Rlog.d(LOG_TAG, "Set Radio State to SIM_READY");
+	        /*
+			    {
+						RILRequest rr = RILRequest.obtain(
+								RIL_REQUEST_SET_GPRS_TRANSFER_TYPE, null);
+			
+						if (RILJ_LOGD)
+							riljLog(rr.serialString() + "> " + requestToString(rr.mRequest));
+			
+						rr.mParcel.writeInt(1);
+						rr.mParcel.writeInt(1);
+			
+						send(rr);
+					}
+					{
+						RILRequest rr = RILRequest.obtain(
+								RIL_REQUEST_SET_GPRS_CONNECT_TYPE, null);
+		
+						if (RILJ_LOGD)
+							riljLog(rr.serialString() + "> "
+									+ requestToString(rr.mRequest));
+		
+						rr.mParcel.writeInt(1);
+						rr.mParcel.writeInt(1);
+		
+						send(rr);
+					}*/
+				break;
+	    case 5: // RUIM_NOT_READY;
+	        Rlog.d(LOG_TAG, "Set Radio State to RUIM_NOT_READY");
+			    break;
+	    case 6: // RUIM_READY;
+	        Rlog.d(LOG_TAG, "Set Radio State to RUIM_READY");
+			    break;
+	    case 7: // RUIM_LOCKED_OR_ABSENT;
+	        Rlog.d(LOG_TAG, "Set Radio State to RUIM_LOCKED_OR_ABSENT");
+			    break;
+	    case 8: // NV_NOT_READY;
+	        Rlog.d(LOG_TAG, "Set Radio State to NV_NOT_READY");
+			    break;
+	    case 9: // NV_READY;
+	        Rlog.d(LOG_TAG, "Set Radio State to NV_READY");
+			    break;
+	    case 10: // RADIO_ON;
+	      Rlog.d(LOG_TAG, "Set Radio State to RADIO_ON");
+	    	break;
+			default: 
+				Rlog.e(LOG_TAG, "Unrecognized Radio State: " + stateCode);
 		}
 	}
 
@@ -1304,7 +1353,7 @@ public class MediaTekRIL extends RIL implements CommandsInterface {
 		RILRequest rr = RILRequest.obtain(RIL_REQUEST_DUAL_SIM_MODE_SWITCH,
 				result);
 
-		Rlog.d(RILJ_LOG_TAG, rr.serialString() + "> "
+		Rlog.d(LOG_TAG, rr.serialString() + "> "
 				+ requestToString(rr.mRequest));
 
 		rr.mParcel.writeInt(1);
@@ -1316,7 +1365,7 @@ public class MediaTekRIL extends RIL implements CommandsInterface {
 	@Override
 	public void setUiccSubscription(int slotId, int appIndex, int subId,
 			int subStatus, Message result) {
-		Rlog.d(RILJ_LOG_TAG, "setUiccSubscription" + slotId + " " + appIndex
+		Rlog.d(LOG_TAG, "setUiccSubscription" + slotId + " " + appIndex
 				+ " " + subId + " " + subStatus);
 
 		// Fake response (note: should be sent before
@@ -1346,7 +1395,7 @@ public class MediaTekRIL extends RIL implements CommandsInterface {
 
 	public void setDataSubscription(Message response) {
 		int simId = mInstanceId == null ? 0 : mInstanceId;
-		Rlog.d(RILJ_LOG_TAG, "Setting data subscription to " + simId
+		Rlog.d(LOG_TAG, "Setting data subscription to " + simId
 				+ " ignored on MTK");
 		AsyncResult.forMessage(response, 0, null);
 		response.sendToTarget();
@@ -1354,44 +1403,44 @@ public class MediaTekRIL extends RIL implements CommandsInterface {
 
 	public void setDefaultVoiceSub(int subIndex, Message response) {
 		// No need to inform the RIL on MTK
-		Rlog.d(RILJ_LOG_TAG, "Setting defaultvoice subscription to "
+		Rlog.d(LOG_TAG, "Setting defaultvoice subscription to "
 				+ mInstanceId + " ignored on MTK");
 		AsyncResult.forMessage(response, 0, null);
 		response.sendToTarget();
 	}
 
 	private Object responsePhbEntries(Parcel p) {
-		Rlog.e(RILJ_LOG_TAG, "TODO responsePhbEntries");
+		Rlog.e(LOG_TAG, "TODO responsePhbEntries");
 		return null;
 	}
 
 	private Object responseSimSmsMemoryStatus(Parcel p) {
-		Rlog.e(RILJ_LOG_TAG, "TODO responsePhbEntries");
+		Rlog.e(LOG_TAG, "TODO responsePhbEntries");
 		return null;
 	}
 
 	private Object responseNetworkInfoWithActs(Parcel p) {
-		Rlog.e(RILJ_LOG_TAG, "TODO responsePhbEntries");
+		Rlog.e(LOG_TAG, "TODO responsePhbEntries");
 		return null;
 	}
 
 	private Object responseGetPhbMemStorage(Parcel p) {
-		Rlog.e(RILJ_LOG_TAG, "TODO responsePhbEntries");
+		Rlog.e(LOG_TAG, "TODO responsePhbEntries");
 		return null;
 	}
 
 	private Object responseReadPhbEntryExt(Parcel p) {
-		Rlog.e(RILJ_LOG_TAG, "TODO responsePhbEntries");
+		Rlog.e(LOG_TAG, "TODO responsePhbEntries");
 		return null;
 	}
 
 	private Object responseSmsParams(Parcel p) {
-		Rlog.e(RILJ_LOG_TAG, "TODO responsePhbEntries");
+		Rlog.e(LOG_TAG, "TODO responsePhbEntries");
 		return null;
 	}
 
 	private Object responseCbConfig(Parcel p) {
-		Rlog.e(RILJ_LOG_TAG, "TODO responsePhbEntries");
+		Rlog.e(LOG_TAG, "TODO responsePhbEntries");
 		return null;
 	}
 
@@ -1403,4 +1452,21 @@ public class MediaTekRIL extends RIL implements CommandsInterface {
 		arrayOfObject[1] = Long.valueOf(response);
 		return arrayOfObject;
 	}
+
+	@Override
+  public void setPreferredNetworkType(int networkType , Message response) {
+      RILRequest rr = RILRequest.obtain(
+              RILConstants.RIL_REQUEST_SET_PREFERRED_NETWORK_TYPE, response);
+
+      rr.mParcel.writeInt(1);
+      rr.mParcel.writeInt(networkType + 100);
+
+      mSetPreferredNetworkType = networkType;
+      mPreferredNetworkType = networkType;
+
+      if (RILJ_LOGD) riljLog(rr.serialString() + "> " + requestToString(rr.mRequest)
+              + " : " + networkType);
+
+      send(rr);
+  }
 }
