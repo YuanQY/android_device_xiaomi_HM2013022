@@ -1181,7 +1181,7 @@ public class MediaTekRIL extends RIL implements CommandsInterface {
 				response[0] = new String(
 						hexStringToBytes(response[0].substring(4)), "UTF-16");
 			} catch (UnsupportedEncodingException ex) {
-				riljLog("responseOperatorInfos UnsupportedEncodingException");
+				Rlog.d(LOG_TAG, "responseOperatorInfos UnsupportedEncodingException");
 			}
 		}
 
@@ -1315,7 +1315,7 @@ public class MediaTekRIL extends RIL implements CommandsInterface {
     rr.mParcel.writeInt(on ? 1 : 0);
 
     if (RILJ_LOGD) {
-        riljLog(rr.serialString() + "> " + requestToString(rr.mRequest)
+        Rlog.d(LOG_TAG, rr.serialString() + "> " + requestToString(rr.mRequest)
                 + (on ? " on" : " off"));
     }
 
@@ -1323,7 +1323,7 @@ public class MediaTekRIL extends RIL implements CommandsInterface {
     /*
     RILRequest rr = RILRequest.obtain(RIL_REQUEST_DUAL_SIM_MODE_SWITCH, result);
 
-    if (RILJ_LOGD) riljLog(rr.serialString() + "> " + requestToString(rr.mRequest));
+    if (RILJ_LOGD) Rlog.d(LOG_TAG, rr.serialString() + "> " + requestToString(rr.mRequest));
 
     rr.mParcel.writeInt(1);
     rr.mParcel.writeInt(on ? 3 : 0); // SIM1 | SIM2 ?
@@ -1434,7 +1434,7 @@ public class MediaTekRIL extends RIL implements CommandsInterface {
       mSetPreferredNetworkType = networkType;
       mPreferredNetworkType = networkType;
 
-      if (RILJ_LOGD) riljLog(rr.serialString() + "> " + requestToString(rr.mRequest)
+      if (RILJ_LOGD) Rlog.d(LOG_TAG, rr.serialString() + "> " + requestToString(rr.mRequest)
               + " : " + networkType);
 
       send(rr);
@@ -1446,21 +1446,22 @@ public class MediaTekRIL extends RIL implements CommandsInterface {
       	setRadioMode(0, null);
         disableVTCapability();
       } 
-      Rlog.i(LOG_TAG, "Radio switch state to " + newState);
+      Rlog.w(LOG_TAG, "Radio switch state to " + newState + " isOn:" + newState.isOn());
       setRadioState(newState);
   }
 
   private void disableVTCapability() {
     RILRequest rr = RILRequest.obtain(RIL_REQUEST_DISABLE_VT_CAPABILITY, null);
-    riljLog(rr.serialString() + "> " + requestToString(rr.mRequest));
+    Rlog.d(LOG_TAG, rr.serialString() + "> " + requestToString(rr.mRequest));
     send(rr);
   }
   
   public void setRadioMode(int mode, Message result) {
+  	Rlog.w(LOG_TAG, "Set Radio mode to " + mode);
     RILRequest rr = RILRequest.obtain(RIL_REQUEST_DUAL_SIM_MODE_SWITCH,
 				result);
 
-		riljLog(rr.serialString() + "> " + requestToString(rr.mRequest));
+		Rlog.d(LOG_TAG, rr.serialString() + "> " + requestToString(rr.mRequest));
 
 		rr.mParcel.writeInt(1);
 		rr.mParcel.writeInt(mode);
@@ -1470,19 +1471,19 @@ public class MediaTekRIL extends RIL implements CommandsInterface {
   
    public void setGprsTransferType(int type, Message result) {
     RILRequest rr = RILRequest.obtain(RIL_REQUEST_SET_GPRS_TRANSFER_TYPE, result);
-    riljLog(rr.serialString() + "> " + requestToString(rr.mRequest));
+    Rlog.d(LOG_TAG, rr.serialString() + "> " + requestToString(rr.mRequest));
     rr.mParcel.writeInt(1);
     rr.mParcel.writeInt(type);
     Intent intent = new Intent("android.intent.action.GPRS_TRANSFER_TYPE");
     intent.putExtra("gemini.gprs.transfer.type", type);
     this.mContext.sendStickyBroadcast(intent);
-    riljLog("Broadcast: ACTION_GPRS_CONNECTION_TYPE_SELECT");
+    Rlog.d(LOG_TAG, "Broadcast: ACTION_GPRS_CONNECTION_TYPE_SELECT");
     send(rr);
   }
 
   public void setGprsConnType(int type, Message result)  {
     RILRequest rr = RILRequest.obtain(RIL_REQUEST_SET_GPRS_CONNECT_TYPE, result);
-    riljLog(rr.serialString() + "> " + requestToString(rr.mRequest));
+    Rlog.d(LOG_TAG, rr.serialString() + "> " + requestToString(rr.mRequest));
     rr.mParcel.writeInt(1);
     rr.mParcel.writeInt(type);
     send(rr);
