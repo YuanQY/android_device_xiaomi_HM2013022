@@ -1443,7 +1443,7 @@ public class MediaTekRIL extends RIL implements CommandsInterface {
   @Override
   protected void switchToRadioState(RadioState newState) {
       if (newState.isOn()) {
-      	setRadioMode(0, null);
+      	setRadioMode(3, null);
         disableVTCapability();
       } 
       Rlog.w(LOG_TAG, "Radio switch state to " + newState + " isOn:" + newState.isOn());
