@@ -64,16 +64,16 @@ public class MediaTekRIL extends RIL implements CommandsInterface {
 			switch (telMode) {
 			case 1:
 				if (1 == mSimId)
-					mInstanceId = 3;
+					mInstanceId = 4;
 				break;
 			case 3:
 				break;
 			case 2:
 			case 4:
 				if (1 == mSimId)
-					mInstanceId = 3;
-				else
 					mInstanceId = 4;
+				else
+					mInstanceId = 3;
 				break;
 			}
 			Rlog.d(LOG_TAG, "MediaTekRIL Change mInstanceId to " + mInstanceId
@@ -269,6 +269,7 @@ public class MediaTekRIL extends RIL implements CommandsInterface {
 			}
 
 			// either command succeeds or command fails but with data payload
+			Rlog.w(LOG_TAG, "processSolicited: " + requestToString(rr.mRequest));
 			try {
 				switch (rr.mRequest) {
 				/*
@@ -895,7 +896,7 @@ public class MediaTekRIL extends RIL implements CommandsInterface {
         int dataPosition = p.dataPosition(); // save off position within the
                                              // Parcel
         int response = p.readInt();
-
+        Rlog.w(LOG_TAG, "processUnsolicited: " + responseToString(response));
         switch (response) {
             case RIL_UNSOL_NEIGHBORING_CELL_INFO:
                 ret = responseStrings(p);
@@ -1442,7 +1443,7 @@ public class MediaTekRIL extends RIL implements CommandsInterface {
   @Override
   protected void switchToRadioState(RadioState newState) {
       if (newState.isOn()) {
-      	//setRadioMode(0, null);
+      	setRadioMode(0, null);
         disableVTCapability();
       } 
       Rlog.i(LOG_TAG, "Radio switch state to " + newState);
