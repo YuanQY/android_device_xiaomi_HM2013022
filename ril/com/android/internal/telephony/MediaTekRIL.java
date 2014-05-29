@@ -17,7 +17,7 @@
 package com.android.internal.telephony;
 
 import static com.android.internal.telephony.RILConstants.*;
-
+import android.content.Intent;
 import android.content.Context;
 import android.os.AsyncResult;
 import android.os.HandlerThread;
@@ -45,6 +45,7 @@ public class MediaTekRIL extends RIL implements CommandsInterface {
 	// TODO: Support multiSIM
 	// Sim IDs are 0 / 1
 	final int mSimId = 1;
+	private static boolean mInitialRadioStateChange = false;
 
 	public MediaTekRIL(Context context, int networkMode, int cdmaSubscription) {
 		super(context, networkMode, cdmaSubscription, null);
@@ -1265,60 +1266,13 @@ public class MediaTekRIL extends RIL implements CommandsInterface {
 			    break;
 			case 3: // SIM_LOCKED_OR_ABSENT;
 			    Rlog.d(LOG_TAG, "Set Radio State to SIM_LOCKED_OR_ABSENT");
-			    {
-						RILRequest rr = RILRequest.obtain(
-								RIL_REQUEST_SET_GPRS_TRANSFER_TYPE, null);
-			
-						if (RILJ_LOGD)
-							riljLog(rr.serialString() + "> " + requestToString(rr.mRequest));
-			
-						rr.mParcel.writeInt(1);
-						rr.mParcel.writeInt(1);
-			
-						send(rr);
-					}
-					{
-						RILRequest rr = RILRequest.obtain(
-								RIL_REQUEST_SET_GPRS_CONNECT_TYPE, null);
-		
-						if (RILJ_LOGD)
-							riljLog(rr.serialString() + "> "
-									+ requestToString(rr.mRequest));
-		
-						rr.mParcel.writeInt(1);
-						rr.mParcel.writeInt(1);
-		
-						send(rr);
-					}
+			    setGprsTransferType(1, null);
+			    setGprsConnType(1, null);
 			    break;
 	    case 4: // SIM_READY;
 	        Rlog.d(LOG_TAG, "Set Radio State to SIM_READY");
-	        /*
-			    {
-						RILRequest rr = RILRequest.obtain(
-								RIL_REQUEST_SET_GPRS_TRANSFER_TYPE, null);
-			
-						if (RILJ_LOGD)
-							riljLog(rr.serialString() + "> " + requestToString(rr.mRequest));
-			
-						rr.mParcel.writeInt(1);
-						rr.mParcel.writeInt(1);
-			
-						send(rr);
-					}
-					{
-						RILRequest rr = RILRequest.obtain(
-								RIL_REQUEST_SET_GPRS_CONNECT_TYPE, null);
-		
-						if (RILJ_LOGD)
-							riljLog(rr.serialString() + "> "
-									+ requestToString(rr.mRequest));
-		
-						rr.mParcel.writeInt(1);
-						rr.mParcel.writeInt(1);
-		
-						send(rr);
-					}*/
+	        setGprsTransferType(1, null);
+			    setGprsConnType(1, null);
 				break;
 	    case 5: // RUIM_NOT_READY;
 	        Rlog.d(LOG_TAG, "Set Radio State to RUIM_NOT_READY");
@@ -1350,16 +1304,31 @@ public class MediaTekRIL extends RIL implements CommandsInterface {
 			return;
 		}
 
-		RILRequest rr = RILRequest.obtain(RIL_REQUEST_DUAL_SIM_MODE_SWITCH,
-				result);
+		if (!this.mState.isOn()) {
+      setPreferredNetworkType(mPreferredNetworkType, null);
+		}
 
-		Rlog.d(LOG_TAG, rr.serialString() + "> "
-				+ requestToString(rr.mRequest));
+    RILRequest rr = RILRequest.obtain(RIL_REQUEST_RADIO_POWER, result);
 
-		rr.mParcel.writeInt(1);
-		rr.mParcel.writeInt(on ? 3 : 0); // SIM1 | SIM2 ?
+    rr.mParcel.writeInt(1);
+    rr.mParcel.writeInt(on ? 1 : 0);
 
-		send(rr);
+    if (RILJ_LOGD) {
+        riljLog(rr.serialString() + "> " + requestToString(rr.mRequest)
+                + (on ? " on" : " off"));
+    }
+
+    send(rr);
+    /*
+    RILRequest rr = RILRequest.obtain(RIL_REQUEST_DUAL_SIM_MODE_SWITCH, result);
+
+    if (RILJ_LOGD) riljLog(rr.serialString() + "> " + requestToString(rr.mRequest));
+
+    rr.mParcel.writeInt(1);
+    rr.mParcel.writeInt(on ? 3 : 0); // SIM1 | SIM2 ?
+
+    send(rr);
+		*/
 	}
 
 	@Override
@@ -1468,5 +1437,53 @@ public class MediaTekRIL extends RIL implements CommandsInterface {
               + " : " + networkType);
 
       send(rr);
+  }
+
+  @Override
+  protected void switchToRadioState(RadioState newState) {
+      if (newState.isOn()) {
+      	//setRadioMode(0, null);
+        disableVTCapability();
+      } 
+      Rlog.i(LOG_TAG, "Radio switch state to " + newState);
+      setRadioState(newState);
+  }
+
+  private void disableVTCapability() {
+    RILRequest rr = RILRequest.obtain(RIL_REQUEST_DISABLE_VT_CAPABILITY, null);
+    riljLog(rr.serialString() + "> " + requestToString(rr.mRequest));
+    send(rr);
+  }
+  
+  public void setRadioMode(int mode, Message result) {
+    RILRequest rr = RILRequest.obtain(RIL_REQUEST_DUAL_SIM_MODE_SWITCH,
+				result);
+
+		riljLog(rr.serialString() + "> " + requestToString(rr.mRequest));
+
+		rr.mParcel.writeInt(1);
+		rr.mParcel.writeInt(mode);
+
+		send(rr);
+  }
+  
+   public void setGprsTransferType(int type, Message result) {
+    RILRequest rr = RILRequest.obtain(RIL_REQUEST_SET_GPRS_TRANSFER_TYPE, result);
+    riljLog(rr.serialString() + "> " + requestToString(rr.mRequest));
+    rr.mParcel.writeInt(1);
+    rr.mParcel.writeInt(type);
+    Intent intent = new Intent("android.intent.action.GPRS_TRANSFER_TYPE");
+    intent.putExtra("gemini.gprs.transfer.type", type);
+    this.mContext.sendStickyBroadcast(intent);
+    riljLog("Broadcast: ACTION_GPRS_CONNECTION_TYPE_SELECT");
+    send(rr);
+  }
+
+  public void setGprsConnType(int type, Message result)  {
+    RILRequest rr = RILRequest.obtain(RIL_REQUEST_SET_GPRS_CONNECT_TYPE, result);
+    riljLog(rr.serialString() + "> " + requestToString(rr.mRequest));
+    rr.mParcel.writeInt(1);
+    rr.mParcel.writeInt(type);
+    send(rr);
   }
 }

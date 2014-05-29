@@ -105,6 +105,7 @@ TARGET_USE_CUSTOM_LUN_FILE_PATH := /sys/devices/platform/mt_usb/gadget/lun%d/fil
 
 # Telephony
 BOARD_RIL_CLASS := ../../../$(DEVICE_FOLDER)/ril/
+#BOARD_PROVIDES_LIBRIL := TRUE
 
 # Hardware tunables
 BOARD_HARDWARE_CLASS := $(DEVICE_FOLDER)/cmhw/
