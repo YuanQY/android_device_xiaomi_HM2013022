@@ -1049,20 +1049,20 @@ public class MediaTekRIL extends RIL implements CommandsInterface {
                 if (RILJ_LOGD) unsljLogRet(response, ret);
                 rewindAndReplace = true;
                 newResponseCode = RIL_UNSOL_RESPONSE_SIM_STATUS_CHANGED;
-                break;/*
+                break;
             case RIL_UNSOL_RADIO_TEMPORARILY_UNAVAILABLE:
                 if (RILJ_LOGD) unsljLogRet(response, ret);
+                Rlog.e(LOG_TAG, "TODO  RIL_UNSOL_RADIO_TEMPORARILY_UNAVAILABLE");
                 rewindAndReplace = true;
                 newResponseCode = RIL_UNSOL_RESPONSE_RADIO_STATE_CHANGED;
-                break;*/
+                break;
             case RIL_UNSOL_ME_SMS_STORAGE_FULL:
                 if (RILJ_LOGD) unsljLogRet(response, ret);
                 Rlog.e(LOG_TAG, "TODO  RIL_UNSOL_ME_SMS_STORAGE_FULL");
                 break;
             case RIL_UNSOL_SMS_READY_NOTIFICATION:
+                Rlog.e(LOG_TAG, "TODO  RIL_UNSOL_SMS_READY_NOTIFICATION");
                 if (RILJ_LOGD) unsljLogRet(response, ret);
-                rewindAndReplace = true;
-                newResponseCode = RIL_UNSOL_RESPONSE_NEW_SMS_STATUS_REPORT;
                 break;
             case RIL_UNSOL_SCRI_RESULT:
                 Rlog.e(LOG_TAG, "TODO  RIL_UNSOL_SCRI_RESULT");
@@ -1267,8 +1267,8 @@ public class MediaTekRIL extends RIL implements CommandsInterface {
 			    break;
 			case 3: // SIM_LOCKED_OR_ABSENT;
 			    Rlog.d(LOG_TAG, "Set Radio State to SIM_LOCKED_OR_ABSENT");
-			    setGprsTransferType(1, null);
-			    setGprsConnType(1, null);
+			    //setGprsTransferType(1, null);
+			    //setGprsConnType(1, null);
 			    break;
 	    case 4: // SIM_READY;
 	        Rlog.d(LOG_TAG, "Set Radio State to SIM_READY");
@@ -1445,7 +1445,7 @@ public class MediaTekRIL extends RIL implements CommandsInterface {
       if (newState.isOn()) {
       	setRadioMode(3, null);
         disableVTCapability();
-      } 
+      }
       Rlog.w(LOG_TAG, "Radio switch state to " + newState + " isOn:" + newState.isOn());
       setRadioState(newState);
   }
