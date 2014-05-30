@@ -1176,13 +1176,13 @@ public class MediaTekRIL extends RIL implements CommandsInterface {
         }
 
         if ((response[0] != null) && (response[0].startsWith("uCs2") == true)) {
-        	  if (RILJ_LOGD)
+            if (RILJ_LOGD)
                 Rlog.d(RILJ_LOG_TAG, "responseOperator handling UCS2 format name");
             try {
                 response[0] = new String(
                         hexStringToBytes(response[0].substring(4)), "UTF-16");
             } catch (UnsupportedEncodingException ex) {
-                Rlog.d(LOG_TAG, "responseOperatorInfos UnsupportedEncodingException");
+                Rlog.e(LOG_TAG, "responseOperatorInfos UnsupportedEncodingException");
             }
         }
 
