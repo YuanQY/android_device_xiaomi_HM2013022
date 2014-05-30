@@ -896,7 +896,7 @@ public class MediaTekRIL extends RIL implements CommandsInterface {
         int dataPosition = p.dataPosition(); // save off position within the
                                              // Parcel
         int response = p.readInt();
-        Rlog.w(LOG_TAG, "processUnsolicited: " + responseToString(response));
+        
         switch (response) {
             case RIL_UNSOL_NEIGHBORING_CELL_INFO:
                 ret = responseStrings(p);
@@ -1176,7 +1176,8 @@ public class MediaTekRIL extends RIL implements CommandsInterface {
         }
 
         if ((response[0] != null) && (response[0].startsWith("uCs2") == true)) {
-            Rlog.d(RILJ_LOG_TAG, "responseOperator handling UCS2 format name");
+        	  if (RILJ_LOGD)
+                Rlog.d(RILJ_LOG_TAG, "responseOperator handling UCS2 format name");
             try {
                 response[0] = new String(
                         hexStringToBytes(response[0].substring(4)), "UTF-16");
@@ -1189,9 +1190,10 @@ public class MediaTekRIL extends RIL implements CommandsInterface {
                 && (response[0].equals("") || response[0].equals(response[2]))) {
             Operators init = new Operators();
             String temp = init.unOptimizedOperatorReplace(response[2]);
-            Rlog.d(RILJ_LOG_TAG, "lookup RIL responseOperator() " + response[2]
-                    + " gave " + temp + " was " + response[0] + "/"
-                    + response[1] + " before.");
+            if (RILJ_LOGD)
+                Rlog.d(RILJ_LOG_TAG, "lookup RIL responseOperator() " + response[2]
+                        + " gave " + temp + " was " + response[0] + "/"
+                        + response[1] + " before.");
             response[0] = temp;
             response[1] = temp;
         }
@@ -1216,9 +1218,10 @@ public class MediaTekRIL extends RIL implements CommandsInterface {
         rr.mParcel.writeInt(callId);
         rr.mParcel.writeInt(seqNumber);
 
-        Rlog.d(RILJ_LOG_TAG, rr.serialString() + "> "
-                + requestToString(rr.mRequest) + " " + callMode + " " + callId
-                + " " + seqNumber);
+        if (RILJ_LOGD)
+            Rlog.d(RILJ_LOG_TAG, rr.serialString() + "> "
+                    + requestToString(rr.mRequest) + " " + callMode + " " + callId
+                    + " " + seqNumber);
 
         send(rr);
     }
@@ -1242,10 +1245,11 @@ public class MediaTekRIL extends RIL implements CommandsInterface {
         rr.mParcel.writeString(protocol);
         rr.mParcel.writeString("1");
 
-        Rlog.d(LOG_TAG, rr.serialString() + "> "
-                + requestToString(rr.mRequest) + " " + radioTechnology + " "
-                + profile + " " + apn + " " + user + " " + password + " "
-                + authType + " " + protocol + "1");
+        if (RILJ_LOGD)
+            Rlog.d(LOG_TAG, rr.serialString() + "> "
+                    + requestToString(rr.mRequest) + " " + radioTechnology + " "
+                    + profile + " " + apn + " " + user + " " + password + " "
+                    + authType + " " + protocol + "1");
 
         send(rr);
     }
@@ -1265,42 +1269,53 @@ public class MediaTekRIL extends RIL implements CommandsInterface {
     private void setRadioStateFromRILInt(int stateCode) {
         switch (stateCode) {
             case 0: // RADIO_OFF
-                Rlog.d(LOG_TAG, "Set Radio State to RADIO_OFF");
+                if (RILJ_LOGD)
+                    Rlog.d(LOG_TAG, "Set Radio State to RADIO_OFF");
                 break;
             case 1: // RADIO_UNAVAILABLE
-                Rlog.d(LOG_TAG, "Set Radio State to RADIO_UNAVAILABLE");
+                if (RILJ_LOGD)
+                    Rlog.d(LOG_TAG, "Set Radio State to RADIO_UNAVAILABLE");
                 break;
-          case 2: // SIM_NOT_READY
-                  Rlog.d(LOG_TAG, "Set Radio State to SIM_NOT_READY");
+            case 2: // SIM_NOT_READY
+                if (RILJ_LOGD)
+                    Rlog.d(LOG_TAG, "Set Radio State to SIM_NOT_READY");
                 break;
             case 3: // SIM_LOCKED_OR_ABSENT;
-                Rlog.d(LOG_TAG, "Set Radio State to SIM_LOCKED_OR_ABSENT");
+                if (RILJ_LOGD)
+                    Rlog.d(LOG_TAG, "Set Radio State to SIM_LOCKED_OR_ABSENT");
                 //setGprsTransferType(1, null);
                 //setGprsConnType(1, null);
                 break;
-        case 4: // SIM_READY;
-            Rlog.d(LOG_TAG, "Set Radio State to SIM_READY");
-            setGprsTransferType(1, null);
-                setGprsConnType(1, null);
+            case 4: // SIM_READY;
+                if (RILJ_LOGD)
+                    Rlog.d(LOG_TAG, "Set Radio State to SIM_READY");
+                    setGprsTransferType(1, null);
+                    setGprsConnType(1, null);
                 break;
-        case 5: // RUIM_NOT_READY;
-            Rlog.d(LOG_TAG, "Set Radio State to RUIM_NOT_READY");
+            case 5: // RUIM_NOT_READY;
+                if (RILJ_LOGD)
+                    Rlog.d(LOG_TAG, "Set Radio State to RUIM_NOT_READY");
                 break;
-        case 6: // RUIM_READY;
-            Rlog.d(LOG_TAG, "Set Radio State to RUIM_READY");
+            case 6: // RUIM_READY;
+                if (RILJ_LOGD)
+                    Rlog.d(LOG_TAG, "Set Radio State to RUIM_READY");
                 break;
-        case 7: // RUIM_LOCKED_OR_ABSENT;
-            Rlog.d(LOG_TAG, "Set Radio State to RUIM_LOCKED_OR_ABSENT");
+            case 7: // RUIM_LOCKED_OR_ABSENT;
+                if (RILJ_LOGD)
+                    Rlog.d(LOG_TAG, "Set Radio State to RUIM_LOCKED_OR_ABSENT");
                 break;
-        case 8: // NV_NOT_READY;
-            Rlog.d(LOG_TAG, "Set Radio State to NV_NOT_READY");
+            case 8: // NV_NOT_READY;
+                if (RILJ_LOGD)
+                    Rlog.d(LOG_TAG, "Set Radio State to NV_NOT_READY");
                 break;
-        case 9: // NV_READY;
-            Rlog.d(LOG_TAG, "Set Radio State to NV_READY");
+            case 9: // NV_READY;
+                if (RILJ_LOGD)
+                    Rlog.d(LOG_TAG, "Set Radio State to NV_READY");
                 break;
-        case 10: // RADIO_ON;
-          Rlog.d(LOG_TAG, "Set Radio State to RADIO_ON");
-            break;
+            case 10: // RADIO_ON;
+               if (RILJ_LOGD)
+                   Rlog.d(LOG_TAG, "Set Radio State to RADIO_ON");
+               break;
             default: 
                 Rlog.e(LOG_TAG, "Unrecognized Radio State: " + stateCode);
         }
@@ -1317,34 +1332,27 @@ public class MediaTekRIL extends RIL implements CommandsInterface {
             setPreferredNetworkType(mPreferredNetworkType, null);
         }
 
-    RILRequest rr = RILRequest.obtain(RIL_REQUEST_RADIO_POWER, result);
+        RILRequest rr = RILRequest.obtain(RIL_REQUEST_RADIO_POWER, result);
 
-    rr.mParcel.writeInt(1);
-    rr.mParcel.writeInt(on ? 1 : 0);
+        rr.mParcel.writeInt(1);
+        rr.mParcel.writeInt(on ? 1 : 0);
 
-    if (RILJ_LOGD) {
-        Rlog.d(LOG_TAG, rr.serialString() + "> " + requestToString(rr.mRequest)
-                + (on ? " on" : " off"));
-    }
+        if (RILJ_LOGD) {
+            Rlog.d(LOG_TAG, rr.serialString() + "> " + requestToString(rr.mRequest)
+                    + (on ? " on" : " off"));
+        }
 
-    send(rr);
-    /*
-    RILRequest rr = RILRequest.obtain(RIL_REQUEST_DUAL_SIM_MODE_SWITCH, result);
-
-    if (RILJ_LOGD) Rlog.d(LOG_TAG, rr.serialString() + "> " + requestToString(rr.mRequest));
-
-    rr.mParcel.writeInt(1);
-    rr.mParcel.writeInt(on ? 3 : 0); // SIM1 | SIM2 ?
-
-    send(rr);
-        */
+        send(rr);
+        
+        // setRadioMode(on ? 3 : 0, null); // SIM1 | SIM2 ?
     }
 
     @Override
     public void setUiccSubscription(int slotId, int appIndex, int subId,
             int subStatus, Message result) {
-        Rlog.d(LOG_TAG, "setUiccSubscription" + slotId + " " + appIndex
-                + " " + subId + " " + subStatus);
+        if (RILJ_LOGD)
+            Rlog.d(LOG_TAG, "setUiccSubscription" + slotId + " " + appIndex
+                    + " " + subId + " " + subStatus);
 
         // Fake response (note: should be sent before
         // mSubscriptionStatusRegistrants or
@@ -1373,16 +1381,18 @@ public class MediaTekRIL extends RIL implements CommandsInterface {
 
     public void setDataSubscription(Message response) {
         int simId = mInstanceId == null ? 0 : mInstanceId;
-        Rlog.d(LOG_TAG, "Setting data subscription to " + simId
-                + " ignored on MTK");
+        if (RILJ_LOGD)
+            Rlog.d(LOG_TAG, "Setting data subscription to " + simId
+                    + " ignored on MTK");
         AsyncResult.forMessage(response, 0, null);
         response.sendToTarget();
     }
 
     public void setDefaultVoiceSub(int subIndex, Message response) {
         // No need to inform the RIL on MTK
-        Rlog.d(LOG_TAG, "Setting defaultvoice subscription to "
-                + mInstanceId + " ignored on MTK");
+        if (RILJ_LOGD)
+            Rlog.d(LOG_TAG, "Setting defaultvoice subscription to "
+                    + mInstanceId + " ignored on MTK");
         AsyncResult.forMessage(response, 0, null);
         response.sendToTarget();
     }
@@ -1454,44 +1464,50 @@ public class MediaTekRIL extends RIL implements CommandsInterface {
           setRadioMode(3, null);
         disableVTCapability();
       }
-      Rlog.w(LOG_TAG, "Radio switch state to " + newState + " isOn:" + newState.isOn());
+      if (RILJ_LOGD)
+          Rlog.d(LOG_TAG, "Radio switch state to " + newState + " isOn:" + newState.isOn());
       setRadioState(newState);
   }
 
   private void disableVTCapability() {
     RILRequest rr = RILRequest.obtain(RIL_REQUEST_DISABLE_VT_CAPABILITY, null);
-    Rlog.d(LOG_TAG, rr.serialString() + "> " + requestToString(rr.mRequest));
+    if (RILJ_LOGD) 
+        Rlog.d(LOG_TAG, rr.serialString() + "> " + requestToString(rr.mRequest));
     send(rr);
   }
   
   public void setRadioMode(int mode, Message result) {
       Rlog.w(LOG_TAG, "Set Radio mode to " + mode);
-    RILRequest rr = RILRequest.obtain(RIL_REQUEST_DUAL_SIM_MODE_SWITCH,
+      RILRequest rr = RILRequest.obtain(RIL_REQUEST_DUAL_SIM_MODE_SWITCH,
                 result);
 
-        Rlog.d(LOG_TAG, rr.serialString() + "> " + requestToString(rr.mRequest));
+      if (RILJ_LOGD)
+          Rlog.d(LOG_TAG, rr.serialString() + "> " + requestToString(rr.mRequest));
 
-        rr.mParcel.writeInt(1);
-        rr.mParcel.writeInt(mode);
+      rr.mParcel.writeInt(1);
+      rr.mParcel.writeInt(mode);
 
-        send(rr);
+      send(rr);
   }
   
    public void setGprsTransferType(int type, Message result) {
     RILRequest rr = RILRequest.obtain(RIL_REQUEST_SET_GPRS_TRANSFER_TYPE, result);
-    Rlog.d(LOG_TAG, rr.serialString() + "> " + requestToString(rr.mRequest));
+    if (RILJ_LOGD)
+        Rlog.d(LOG_TAG, rr.serialString() + "> " + requestToString(rr.mRequest));
     rr.mParcel.writeInt(1);
     rr.mParcel.writeInt(type);
     Intent intent = new Intent("android.intent.action.GPRS_TRANSFER_TYPE");
     intent.putExtra("gemini.gprs.transfer.type", type);
     this.mContext.sendStickyBroadcast(intent);
-    Rlog.d(LOG_TAG, "Broadcast: ACTION_GPRS_CONNECTION_TYPE_SELECT");
+    if (RILJ_LOGD)
+        Rlog.d(LOG_TAG, "Broadcast: ACTION_GPRS_CONNECTION_TYPE_SELECT");
     send(rr);
   }
 
   public void setGprsConnType(int type, Message result)  {
     RILRequest rr = RILRequest.obtain(RIL_REQUEST_SET_GPRS_CONNECT_TYPE, result);
-    Rlog.d(LOG_TAG, rr.serialString() + "> " + requestToString(rr.mRequest));
+    if (RILJ_LOGD)
+        Rlog.d(LOG_TAG, rr.serialString() + "> " + requestToString(rr.mRequest));
     rr.mParcel.writeInt(1);
     rr.mParcel.writeInt(type);
     send(rr);
