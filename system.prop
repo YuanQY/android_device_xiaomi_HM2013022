@@ -93,6 +93,8 @@ ril.flightmode.poweroffMD=0
 ril.telephony.mode=2
 ril.radiooff.poweroffMD=0
 
+persist.radio.multisim.config=dsds
+
 gps.solution.combo.chip=1
 fmradio.driver.chip=3
 ro.sf.hwrotation=0
@@ -121,4 +123,4 @@ ro.kernel.android.checkjni=0
 net.bt.name=Android
 dalvik.vm.stack-trace-file=/data/anr/traces.txt
 persist.service.adb.enable=1
-ro.telephony.default_network=1
+ro.telephony.default_network=2,1

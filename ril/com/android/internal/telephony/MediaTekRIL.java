@@ -190,14 +190,15 @@ public class MediaTekRIL extends RIL implements CommandsInterface {
 
     // TODO: Support multiSIM
     // Sim IDs are 0 / 1
-    int mSimId = 1;
+    int mSimId = 0;
 
     public MediaTekRIL(Context context, int networkMode, int cdmaSubscription) {
-            super(context, networkMode, cdmaSubscription, 4);
+            super(context, networkMode, cdmaSubscription, null);
     }
 
     public MediaTekRIL(Context context, int networkMode, int cdmaSubscription, Integer instanceId) {
             super(context, networkMode, cdmaSubscription, instanceId);
+            mSimId = instanceId;
     }
 
     public static byte[] hexStringToBytes(String s) {
