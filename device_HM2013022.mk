@@ -112,7 +112,8 @@ PRODUCT_PROPERTY_OVERRIDES := \
 	wifi.tethering.interface=ap0
 
 PRODUCT_PACKAGES += \
-	fsck.f2fs
+	fsck.f2fs \
+	PinyinIME
 
 # audio
 PRODUCT_PACKAGES += \
