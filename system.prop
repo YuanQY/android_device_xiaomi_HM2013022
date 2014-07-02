@@ -125,3 +125,6 @@ dalvik.vm.stack-trace-file=/data/anr/traces.txt
 persist.service.adb.enable=1
 ro.telephony.default_network=2,1
 log.redirect-stdio=true
+sys.settings_global_version=1
+sys.settings_system_version=1
+sys.settings_secure_version=1
