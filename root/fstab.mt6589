@@ -10,4 +10,4 @@
 /dev/block/platform/mtk-msdc.0/mmc_host/mmc0 auto auto defaults voldmanaged=sdcard1:8,nonremovable,noemulatedsd
 /dev/block/platform/mtk-msdc.1/mmc_host/mmc1 auto auto defaults voldmanaged=sdcard0:auto,noemulatedsd
 
-#/dev/bootimg      /boot               emmc      defaults          			defaults
+/dev/bootimg      /boot               emmc      defaults          			defaults
